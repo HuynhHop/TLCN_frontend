@@ -1,6 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    navigate('/login');
+  };
+
   const headerStyle = {
     backgroundColor: '#9feea2', // Green background
     padding: '20px',
@@ -30,6 +38,7 @@ const Header = () => {
         <div style={headerItemStyle}>Talk with AI</div>
         <div style={headerItemStyle}>My Course</div>
         <div style={headerItemStyle}>Account</div>
+        <button onClick={handleLogout}>Logout</button>
       </div>
     </header>
   );

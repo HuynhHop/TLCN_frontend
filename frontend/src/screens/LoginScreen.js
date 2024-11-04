@@ -21,6 +21,7 @@ const LoginScreen = () => {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.setItem('accessToken', data.accessToken);
         navigate('/home');
       } else {
         setError(data.message || 'Login failed');

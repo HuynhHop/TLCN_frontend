@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState  } from 'react';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import skyImage from '../assets/1s.jpg';
 import companyImage from '../assets/company.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const HomeScreen = () => {
+  const navigate = useNavigate();
+  const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    setAccessToken(token);
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate, accessToken]);
+  console.log(accessToken)
+
   const courses = [
     { title: 'Beginner', description: 'Mô tả khóa học 1', price: '500.000' },
     { title: 'Vowels', description: 'Mô tả khóa học 2', price: '700.000' },

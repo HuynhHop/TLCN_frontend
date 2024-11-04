@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/login" element={<LoginScreen />} />
-        <Route path="/home" element={<HomeScreen />} /> {/* HomeScreen route */}
+        <Route path="/home" element={<ProtectedRoute><HomeScreen /></ProtectedRoute>} />
         <Route path="/register" element={<RegisterScreen />} />
       </Routes>
     </Router>
