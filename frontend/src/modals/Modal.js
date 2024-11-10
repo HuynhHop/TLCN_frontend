@@ -7,14 +7,10 @@ const Modal = ({ isOpen, onClose, message, onConfirm }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>{message}</h2>
+        <p className="modal-message">{message}</p> {/* Sử dụng lớp modal-message */}
         <div className="modal-actions">
-          <button className="modal-button" onClick={onConfirm}>
-            OK
-          </button>
-          <button className="modal-button" onClick={onClose}>
-            Cancel
-          </button>
+          <button className="modal-button" onClick={onConfirm}>Confirm</button>
+          <button className="modal-button" onClick={onClose}>Close</button>
         </div>
       </div>
     </div>

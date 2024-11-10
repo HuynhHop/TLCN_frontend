@@ -36,4 +36,10 @@
     background-color: #4CAF50; /* Change color on hover */
     color: white;
   }
+
+  .modal-message {
+    color: black; /* Màu đen cho message */
+    font-size: 18px; /* Tùy chỉnh kích thước font nếu muốn */
+    margin-bottom: 20px; /* Khoảng cách dưới cho phần message */
+  }
   

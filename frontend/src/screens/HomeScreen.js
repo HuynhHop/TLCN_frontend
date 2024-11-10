@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import ProductCard from '../components/ProductCard';
 import skyImage from '../assets/1s.jpg';
 import companyImage from '../assets/company.jpg';
+import ocean from '../assets/ocean.png';
 import { useNavigate } from 'react-router-dom';
 
 const HomeScreen = () => {
@@ -12,9 +13,6 @@ const HomeScreen = () => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     setAccessToken(token);
-    if (!token) {
-      navigate('/login');
-    }
   }, [navigate, accessToken]);
   console.log(accessToken)
 
@@ -38,7 +36,9 @@ const HomeScreen = () => {
   const introductionStyle = {
     textAlign: 'center',
     padding: '20px',
-    backgroundColor: '#3b82f6', // Màu xanh nổi bật
+    backgroundImage: `url(${ocean})`, 
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
     color: '#fff', // Màu chữ trắng
     fontFamily: '"Poppins", sans-serif', // Sử dụng font chữ hiện đại
   };

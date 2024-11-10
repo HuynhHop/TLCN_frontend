@@ -4,6 +4,7 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProfileScreen from './screens/ProfileScreen';
 
 function App() {
   return (
@@ -11,8 +12,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/login" element={<LoginScreen />} />
-        <Route path="/home" element={<ProtectedRoute><HomeScreen /></ProtectedRoute>} />
+        <Route path="/home" element={<HomeScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
+        <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

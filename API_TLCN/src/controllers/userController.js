@@ -480,7 +480,7 @@ class UserController {
   //[PUT] /user/refreshAccessToken
   async refreshAccessToken(req, res, next) {
     try {
-      var cert = fs.readFileSync("../key/publickey.crt");
+      var cert = fs.readFileSync("../public/publickey.crt");
       // Check xem refreshToken có hợp lệ hay không
       jwt.verify(
         cookie.refreshToken,
