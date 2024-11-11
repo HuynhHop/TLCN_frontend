@@ -1,8 +1,13 @@
 const express = require('express');
+const multer = require('multer');
 
 const userController = require("../controllers/userController");
 const roleController = require("../controllers/roleController");
+const courseController = require("../controllers/courseController"); 
+const lessonController = require("../controllers/lessonController");
 const { verifyAccessToken, isAdmin } = require("../middleware/jwt");
+
+const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
@@ -63,5 +68,18 @@ router.delete("/lesson/:id", lessonController.deleteLesson); // Xóa mềm less
 router.delete("/lesson/:id/force", lessonController.deleteLesson); // Xóa cứng lesson
 
 router.patch("/lesson/:id/restore", lessonController.restoreLesson); // Khôi phục lesson
+
+
+router.get("/course/", courseController.getAllCourses); // Get all courses
+router.get("/course/:id", courseController.getCourseById); // Get course by ID
+router.get("/course/:id/lessons", courseController.getLessonsByCourseId); // Get lessons by course ID
+
+router.post("/course/create", courseController.createCourse); // Create new course
+router.put("/course/:id", courseController.updateCourse); // Update course
+router.put("/course/:courseId/addLesson/:lessonId", courseController.addLessonToCourse); // Add lesson to course
+
+router.delete("/course/:id", courseController.deleteCourse); // Soft delete course
+router.delete("/course/:id/force", courseController.forceDeleteCourse); // Force delete course
+router.patch("/course/:id/restore", courseController.restoreCourse); // Restore cour
 
 module.exports = router; //export default
