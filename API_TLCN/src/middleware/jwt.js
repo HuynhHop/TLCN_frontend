@@ -22,7 +22,9 @@ const generateRefreshToken = (uid, role) =>
 
 const verifyAccessToken = (req, res, next) => {
   try {
-    var cert = fs.readFileSync("../public/publickey.crt");
+    const certPath = path.join(__dirname, '../public/publickey.crt');
+    var cert = fs.readFileSync(certPath, 'utf8');
+    //var cert = fs.readFileSync("../public/publickey.crt");
 
     // Bear Token
     // headers: {authorization: Bearer token}

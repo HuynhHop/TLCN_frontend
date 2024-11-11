@@ -49,6 +49,19 @@ router.patch(
   [verifyAccessToken, isAdmin],
   roleController.restore
 );
-//Admin
+
+// API Lesson
+router.get("/lesson/", lessonController.getAllLessons); // Lấy tất cả lesson
+router.get("/lesson/:id", lessonController.getLessonById); // Lấy lesson theo ID
+router.get("/lesson/:id/readlesson", lessonController.readLesson); // Đọc file Excel lesson
+
+router.post("/lesson/create", upload.single('excelFile'), lessonController.createLesson); // Tạo mới lesson
+
+router.put("/lesson/:id", upload.single('excelFile'), lessonController.updateLesson); // Cập nhật lesson
+
+router.delete("/lesson/:id", lessonController.deleteLesson); // Xóa mềm lesson
+router.delete("/lesson/:id/force", lessonController.deleteLesson); // Xóa cứng lesson
+
+router.patch("/lesson/:id/restore", lessonController.restoreLesson); // Khôi phục lesson
 
 module.exports = router; //export default
