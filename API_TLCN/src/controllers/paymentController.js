@@ -1,5 +1,5 @@
 const moment = require('moment');
-const fetch = require('node-fetch');
+const axios = require("axios");
 const crypto = require('crypto');
 const config = require('../config/vnpay.json');
 const qs = require('qs');
@@ -175,12 +175,10 @@ class PaymentController {
                 'vnp_SecureHash': vnp_SecureHash
             };
 
-            const response = await fetch(vnp_Api, {
-                method: 'POST',
+            const response = await axios.post(vnp_Api, dataObj, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dataObj),
             });
 
             res.status(200).json({
@@ -243,12 +241,10 @@ class PaymentController {
                 'vnp_SecureHash': vnp_SecureHash
             };
 
-            const response = await fetch(vnp_Api, {
-                method: 'POST',
+            const response = await axios.post(vnp_Api, dataObj, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dataObj),
             });
 
             res.status(200).json({
