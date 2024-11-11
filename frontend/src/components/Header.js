@@ -416,7 +416,15 @@ const Header = () => {
                   </button>
                 </>
               ) : (
-                <p style={{ color: '#555' }}>Loading...</p>
+                // <p style={{ color: '#555' }}>Loading...</p>
+                <button
+                    style={dropdownButtonStyle}
+                    onClick={handleLogout}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                  >
+                    <FaSignOutAlt style={{ marginRight: '8px' }} /> Login
+                </button>
               )}
             </div>
           )}
