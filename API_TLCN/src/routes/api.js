@@ -1,9 +1,10 @@
 const express = require('express');
-
+const multer = require('multer');
 const userController = require("../controllers/userController");
 const roleController = require("../controllers/roleController");
+const lessonController = require("../controllers/lessonController")
 const { verifyAccessToken, isAdmin } = require("../middleware/jwt");
-
+const upload = multer({ dest: "uploads/" });
 const router = express.Router();
 
 // API User
