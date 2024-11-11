@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Modal from '../modals/Modal';
 import '../css/LoginScreen.css';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -22,7 +24,13 @@ const LoginScreen = () => {
 
       if (response.ok) {
         localStorage.setItem('accessToken', data.accessToken);
-        navigate('/home');
+        setIsModalOpen(true); // Show modal on successful login
+
+        // Automatically navigate to home after 3 seconds
+        setTimeout(() => {
+          setIsModalOpen(false); // Hide modal
+          navigate('/home');
+        }, 3000);
       } else {
         setError(data.message || 'Login failed');
       }
@@ -33,7 +41,6 @@ const LoginScreen = () => {
 
   return (
     <div className="login-container">
-      {/* Left Side: Login Box */}
       <div className="login-box">
         <h2>Sign in</h2>
         <div className="input-frame">
@@ -53,18 +60,12 @@ const LoginScreen = () => {
           />
         </div>
         <button type="button" onClick={handleLogin}>Sign in</button>
-
-        {/* Forgot Password link */}
         <div className="login-links">
           <span onClick={() => navigate('/forgot-password')} className="link">
             Forgot password?
           </span>
         </div>
-
-        {/* Error message */}
         {error && <p className="error-message">{error}</p>}
-
-        {/* Signup link */}
         <div className="signup-link">
           <p>
             Don’t have an account?{' '}
@@ -74,14 +75,21 @@ const LoginScreen = () => {
           </p>
         </div>
       </div>
-
-      {/* Right Side: Welcome Message and Description */}
       <div className="right-section">
         <div style={{ fontSize: '48px', fontWeight: 'bold' }}>Welcome to My Website</div>
         <div className="description">
           This website is designed to help you practice your English speaking skills. Join our community and improve your pronunciation through interactive exercises and feedback.
         </div>
       </div>
+
+      {/* Render Modal if login is successful */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        message="Login successful! Redirecting to home..."
+        showActions={false}
+        onConfirm={() => navigate('/home')}
+      />
     </div>
   );
 };
