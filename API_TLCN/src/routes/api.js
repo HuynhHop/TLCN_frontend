@@ -7,6 +7,7 @@ const courseController = require("../controllers/courseController");
 const lessonController = require("../controllers/lessonController");
 const { verifyAccessToken, isAdmin } = require("../middleware/jwt");
 const AIController = require('../controllers/AIController');
+const paymentController = require('../controllers/paymentController.js');
 
 const upload = multer({ dest: "uploads/" });
 
@@ -85,5 +86,13 @@ router.patch("/course/:id/restore", courseController.restoreCourse); // Restore 
 
 // API ChatAI
 router.post('/ai/chat', AIController.ChatAI);
+
+// API Payment
+router.get('/payment/vnpay_return', paymentController.vnpayIpn);
+router.get('/payment/vnpay_ipn', paymentController.vnpayIpn);
+
+router.post('/payment/create_payment_url', paymentController.createPaymentUrl);
+router.post('/payment/querydr', paymentController.queryTransaction);
+router.post('/payment/refund', paymentController.refundTransaction);
 
 module.exports = router; //export default
