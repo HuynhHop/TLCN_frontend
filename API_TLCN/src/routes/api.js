@@ -6,6 +6,7 @@ const roleController = require("../controllers/roleController");
 const courseController = require("../controllers/courseController"); 
 const lessonController = require("../controllers/lessonController");
 const { verifyAccessToken, isAdmin } = require("../middleware/jwt");
+const AIController = require('../controllers/AIController');
 
 const upload = multer({ dest: "uploads/" });
 
@@ -69,7 +70,7 @@ router.delete("/lesson/:id/force", lessonController.deleteLesson); // Xóa cứ
 
 router.patch("/lesson/:id/restore", lessonController.restoreLesson); // Khôi phục lesson
 
-
+// API Course
 router.get("/course/", courseController.getAllCourses); // Get all courses
 router.get("/course/:id", courseController.getCourseById); // Get course by ID
 router.get("/course/:id/lessons", courseController.getLessonsByCourseId); // Get lessons by course ID
@@ -81,5 +82,8 @@ router.put("/course/:courseId/addLesson/:lessonId", courseController.addLessonTo
 router.delete("/course/:id", courseController.deleteCourse); // Soft delete course
 router.delete("/course/:id/force", courseController.forceDeleteCourse); // Force delete course
 router.patch("/course/:id/restore", courseController.restoreCourse); // Restore cour
+
+// API ChatAI
+router.post('/ai/chat', AIController.ChatAI);
 
 module.exports = router; //export default
