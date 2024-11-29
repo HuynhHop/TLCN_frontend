@@ -224,6 +224,43 @@ class courseController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
+
+  // [GET] /course/search?query=searchTerm
+  async searchCoursesByTitle(req, res) {
+    const { title } = req.params; // Lấy title từ params
+
+    if (!title) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Search title is required" });
+    }
+
+    try {
+      // Sử dụng $regex để tìm kiếm chuỗi trong title (không phân biệt chữ hoa/thường)
+      const courses = await Course.find({
+        title: { $regex: title, $options: "i" },
+      });
+
+      if (courses.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `No courses found matching title: "${title}"`,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Courses found matching title: "${title}"`,
+        data: courses,
+      });
+    } catch (error) {
+      console.error("Error in searchCoursesByTitle:", error);
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while searching for courses",
+      });
+    }
+  }
 }
 
 module.exports = new courseController();

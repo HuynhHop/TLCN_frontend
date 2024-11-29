@@ -5,7 +5,6 @@ import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProfileScreen from './screens/ProfileScreen';
-
 function App() {
   return (
     <Router>

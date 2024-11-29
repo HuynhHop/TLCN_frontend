@@ -83,6 +83,7 @@ router.put("/course/:courseId/addLesson/:lessonId", courseController.addLessonTo
 router.delete("/course/:id", courseController.deleteCourse); // Soft delete course
 router.delete("/course/:id/force", courseController.forceDeleteCourse); // Force delete course
 router.patch("/course/:id/restore", courseController.restoreCourse); // Restore cour
+router.get("/course/search/:title", courseController.searchCoursesByTitle);
 
 // API ChatAI
 router.post('/ai/chat', AIController.ChatAI);
