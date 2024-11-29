@@ -12,6 +12,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
+    console.log (" Token:", token)
     setAccessToken(token);
   }, [navigate, accessToken]);
 
@@ -19,7 +20,7 @@ const HomeScreen = () => {
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
-    backgroundColor: '#f4f7fa',
+    backgroundColor: '#FFFFFF',
   };
 
   const introductionStyle = {
@@ -28,6 +29,7 @@ const HomeScreen = () => {
     backgroundImage: `url(${ocean})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    borderRadius: '20px', // Bo góc
     color: '#fff',
     fontFamily: '"Poppins", sans-serif',
   };
@@ -64,7 +66,7 @@ const HomeScreen = () => {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '60px 40px',
-    backgroundColor: '#fff',
+    backgroundColor: '#f4f7fa',
     marginTop: '40px',
     borderRadius: '10px',
     boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',

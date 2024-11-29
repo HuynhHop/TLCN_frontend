@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import practiceImage from '../assets/speak.png';
 
-const ProductCard = ({ title, description }) => {
+const ProductCard = ({ title, description, image }) => {  // Rename `images` to `image`
   const [isHovered, setIsHovered] = useState(false);
 
   const productCardStyle = {
@@ -9,7 +8,7 @@ const ProductCard = ({ title, description }) => {
     borderRadius: '20%',
     padding: '30px',
     margin: '50px',
-    backgroundColor: '#CCFFFF',
+    backgroundColor: '#F8F8FF',
     textAlign: 'center',
     transition: 'transform 0.2s',
     flex: '0 0 calc(25% - 20px)',
@@ -22,7 +21,7 @@ const ProductCard = ({ title, description }) => {
     height: '150px',
     objectFit: 'cover',
     marginBottom: '20px',
-    borderRadius: '20%', // Optional, for slightly rounded corners
+    borderRadius: '20%',
   };
 
   const headingStyle = {
@@ -35,13 +34,26 @@ const ProductCard = ({ title, description }) => {
   };
 
   const buttonStyle = {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#33CC00',
     color: 'white',
     border: 'none',
-    borderRadius: '5px',
-    padding: '10px 20px',
+    borderRadius: '8px',
+    padding: '12px 24px',
     cursor: 'pointer',
-    marginTop: '15px',
+    fontSize: '16px',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    transition: 'background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease',
+    display: 'inline-block',
+  };
+
+  const buttonHoverStyle = {
+    ...buttonStyle,
+    backgroundColor: '#45a049',
+    transform: 'scale(1.05)',
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
   };
 
   return (
@@ -50,10 +62,16 @@ const ProductCard = ({ title, description }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <img src={practiceImage} alt="Practice" style={imageStyle} />
+      <img src={image} alt="Practice" style={imageStyle} />  {/* Display single image */}
       <h3 style={headingStyle}>{title}</h3>
       <p style={paragraphStyle}>{description}</p>
-      <button style={buttonStyle}>Practice</button>
+      <button
+        style={isHovered ? buttonHoverStyle : buttonStyle}
+        onMouseDown={() => setIsHovered(false)}
+        onMouseUp={() => setIsHovered(true)}
+      >
+        Practice
+      </button>
     </div>
   );
 };

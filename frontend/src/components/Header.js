@@ -4,7 +4,7 @@ import Modal from '../modals/Modal';
 import userAvatar from '../assets/user.png';
 
 // Thêm icon cho avatar (tùy chọn)
-import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
+import { FaUserCircle, FaSignOutAlt, FaSearch } from 'react-icons/fa';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,6 +12,8 @@ const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
   const dropdownRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   // Hàm lấy thông tin người dùng từ token
   const getUserFromToken = async () => {
@@ -20,6 +22,9 @@ const Header = () => {
       if (!token) {
         console.error("No token found in localStorage");
         return;
+      }
+      else {
+        console.log("TokenHeader:", token)
       }
 
       const response = await fetch("http://localhost:8080/v1/api/user/getUserToken", {
@@ -46,6 +51,7 @@ const Header = () => {
       console.error("An error occurred:", error);
     }
   };
+  
 
   useEffect(() => {
     if (isDropdownOpen && user === null) {
@@ -81,18 +87,26 @@ const Header = () => {
     }
   };
 
+  const handleSearch = (event) => {
+    event.preventDefault();
+    // Thực hiện logic tìm kiếm ở đây
+    console.log("Search query:", searchQuery);
+  };
+
   const closeModal = () => setModalOpen(false);
 
   // CSS-in-JS cho phần giao diện
   const headerStyle = {
-    backgroundColor: '#bdb76b', // Màu xanh lá cây hiện đại
-    padding: '20px 40px',
-    color: 'white',
+    background: 'linear-gradient(to right, #33FF33, #000080)', // Gradient màu xanh
+    padding: '15px 30px',
+    color: '#fff',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    position: 'relative',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    borderRadius: '20px', // Bo góc
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.15)', // Bóng mờ nhẹ
+    position: 'sticky',
+    top: 0,
     zIndex: 1000,
   };
 
@@ -107,10 +121,11 @@ const Header = () => {
 
   const brandStyle = {
     fontWeight: 'bold',
-    fontSize: '28px',
-    fontFamily: "'Poppins', sans-serif",
-    letterSpacing: '2px',
-    color: '#ffffff',
+    fontSize: '26px',
+    fontFamily: "'Roboto', sans-serif",
+    letterSpacing: '1px',
+    color: '#fff',
+    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)', // Hiệu ứng chữ nổi
   };
 
   const dropdownStyle = {
@@ -165,10 +180,54 @@ const Header = () => {
     transition: 'background-color 0.3s ease',
   };
 
+  const searchStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: isFocused ? '#ffffff' : '#f1f1f1',
+    borderRadius: '30px',
+    padding: '10px 20px',
+    boxShadow: isFocused
+      ? '0px 4px 8px rgba(0, 0, 0, 0.2)'
+      : '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    maxWidth: isFocused ? '400px' : '300px',
+    transition: 'all 0.3s ease',
+    marginRight: '15px',
+    flexGrow: 1,
+  };
+
+  const searchInputStyle = {
+    border: 'none',
+    outline: 'none',
+    width: '100%',
+    padding: '5px 10px',
+    fontSize: '14px',
+    color: '#333',
+    background: 'transparent',
+  };
+
+  const searchIconStyle = {
+    marginLeft: '10px',
+    color: isFocused ? '#007BFF' : '#4CAF50',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    transform: isFocused ? 'scale(1.2)' : 'scale(1)',
+  };
+
   return (
     <header style={headerStyle}>
       <div style={brandStyle}>SpeechFriend</div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
+        <form style={searchStyle} onSubmit={handleSearch} onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={searchInputStyle}
+          />
+          <FaSearch style={searchIconStyle} onClick={handleSearch} />
+        </form>
         <div style={headerItemStyle}>Talk with AI</div>
         {/* <div style={headerItemStyle}>My Course</div> */}
         <div style={headerItemStyle} onClick={handleAccountClick}>
