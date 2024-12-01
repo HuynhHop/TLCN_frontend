@@ -5,6 +5,8 @@ import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProfileScreen from './screens/ProfileScreen';
+import SearchScreen from './screens/SearchScreen';
+import TalkAIScreen from './screens/TalkAIScreen';
 function App() {
   return (
     <Router>
@@ -13,6 +15,8 @@ function App() {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
+        <Route path="/search-results" element={<SearchScreen />} />
+        <Route path="/talkai" element={<TalkAIScreen />} />
         <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
       </Routes>
     </Router>

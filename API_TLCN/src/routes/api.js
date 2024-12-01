@@ -6,6 +6,7 @@ const roleController = require("../controllers/roleController");
 const courseController = require("../controllers/courseController"); 
 const lessonController = require("../controllers/lessonController");
 const { verifyAccessToken, isAdmin } = require("../middleware/jwt");
+const chatHistory = require("../controllers/ChatHistoryController.js");
 const AIController = require('../controllers/AIController');
 const paymentController = require('../controllers/paymentController.js');
 
@@ -83,10 +84,14 @@ router.put("/course/:courseId/addLesson/:lessonId", courseController.addLessonTo
 router.delete("/course/:id", courseController.deleteCourse); // Soft delete course
 router.delete("/course/:id/force", courseController.forceDeleteCourse); // Force delete course
 router.patch("/course/:id/restore", courseController.restoreCourse); // Restore cour
-router.get("/course/search/:title", courseController.searchCoursesByTitle);
+router.get("/course/search/:title", [verifyAccessToken], courseController.searchCoursesByTitle);
 
 // API ChatAI
 router.post('/ai/chat', AIController.ChatAI);
+// API ChatHistory
+router.post("/chathistory/save/:userId", chatHistory.saveMessage); // Lưu tin nhắn
+router.get("/chathistory/:userId", chatHistory.getChatHistory); // Lấy lịch sử trò chuyện
+router.delete("/chathistory/:userId", chatHistory.deleteChatHistory); // Xóa toàn bộ lịch sử trò chuyện
 
 // API Payment
 router.get('/payment/vnpay_return', paymentController.vnpayIpn);

@@ -55,15 +55,30 @@ const CourseList = () => {
     return images[randomIndex];
   };
 
+  const containerStyle = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: '20px',
+    margin: '0 auto',
+    maxWidth: '1200px',
+  };
+
+  const cardStyle = {
+    flex: '0 0 calc(33.333% - 20px)', // 3 cột
+    boxSizing: 'border-box',
+  };
+
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+    <div style={containerStyle}>
       {courses.map((course) => (
-        <ProductCard
-          key={course._id}
-          title={course.title}
-          description={course.description}
-          image={getRandomImage()}  // Pass the image correctly here
-        />
+        <div key={course._id} style={cardStyle}>
+          <ProductCard
+            title={course.title}
+            description={course.description}
+            image={getRandomImage()}
+          />
+        </div>
       ))}
     </div>
   );
