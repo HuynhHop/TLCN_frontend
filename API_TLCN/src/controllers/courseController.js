@@ -225,7 +225,7 @@ class courseController {
     }
   }
 
-  // [GET] /course/search?query=searchTerm
+  // [GET] /course/title/:title
   async searchCoursesByTitle(req, res) {
     const { title } = req.params; // Lấy title từ params
 

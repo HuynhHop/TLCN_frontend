@@ -43,6 +43,9 @@ const Header = () => {
       console.log("API response:", data);
 
       if (data.success) {
+        // Lưu thông tin người dùng vào localStorage
+        localStorage.setItem("user", JSON.stringify(data.user));
+        console.log("User data saved to localStorage:", data.user);
         setUser(data.user);
       } else {
         console.error("API did not return success:", data.message);
@@ -87,10 +90,48 @@ const Header = () => {
     }
   };
 
-  const handleSearch = (event) => {
+  const handleHomeClick = () => {
+    navigate('/'); // Navigate to /home route
+  };
+
+  const handleTalkClick = () => {
+    navigate('/talkai'); // Navigate to /home route
+  };
+
+  const handleSearch = async (event) => {
     event.preventDefault();
-    // Thực hiện logic tìm kiếm ở đây
-    console.log("Search query:", searchQuery);
+  
+    if (!searchQuery.trim()) {
+      alert('Please enter a search query!');
+      return;
+    }
+  
+    try {
+      const response = await fetch(`http://localhost:8080/v1/api/course/search/${encodeURIComponent(searchQuery)}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP status ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        // Lưu kết quả tìm kiếm vào localStorage hoặc truyền qua state nếu cần
+        localStorage.setItem('searchResults', JSON.stringify(data.data));
+        navigate('/search-results', { state: { results: data.data } });
+      } else {
+        alert(data.message || 'No courses found.');
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      alert('An error occurred while searching. Please try again.');
+    }
   };
 
   const closeModal = () => setModalOpen(false);
@@ -228,7 +269,12 @@ const Header = () => {
           />
           <FaSearch style={searchIconStyle} onClick={handleSearch} />
         </form>
-        <div style={headerItemStyle}>Talk with AI</div>
+        <div style={headerItemStyle} onClick={handleTalkClick}>
+          Talk With AI
+        </div>
+        <div style={headerItemStyle} onClick={handleHomeClick}>
+          Home
+        </div>
         {/* <div style={headerItemStyle}>My Course</div> */}
         <div style={headerItemStyle} onClick={handleAccountClick}>
           <FaUserCircle style={{ marginRight: '8px', fontSize: '20px' }} />
