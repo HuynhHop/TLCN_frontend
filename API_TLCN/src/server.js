@@ -5,6 +5,7 @@ const router = require('./routes/api');
 const connection = require('./config/database');
 const { getHomepage } = require('./controllers/homeController');
 const cors = require('cors');
+const checkExpiredPackages = require('./middleware/cronJobsPackage');
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -33,6 +34,8 @@ app.use('/v1/api/', router);
         //using mongoose
         await connection();
 
+        checkExpiredPackages();
+        
         app.listen(port, () => {
             console.log(`Backend Nodejs App listening on port ${port}`)
         })
