@@ -1,4 +1,4 @@
-const PackageInfo = require('../models/packageInfo');
+const PackageInfo = require('../models/PackageInfo');
 
 class PackageInfoController {
   // [POST] /packageinfo/create
@@ -61,7 +61,7 @@ class PackageInfoController {
       const updatedPackageInfo = await PackageInfo.findByIdAndUpdate(
         req.params.id,
         { packageName, description, price, timeDuration, updatedAt: Date.now() },
-        { new: true }
+        { new: true, runValidators: true } // Bật xác thực khi cập nhật
       );
 
       if (!updatedPackageInfo) {
@@ -82,7 +82,7 @@ class PackageInfoController {
   // [DELETE] /packageinfo/:id
   async deletePackageInfo(req, res) {
     try {
-      const deletedPackageInfo = await PackageInfo.findByIdAndDelete(req.params.id);
+      const deletedPackageInfo = await PackageInfo.delete({_id : req.params.id});
 
       if (!deletedPackageInfo) {
         return res.status(404).json({ success: false, message: "PackageInfo not found" });

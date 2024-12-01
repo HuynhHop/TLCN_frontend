@@ -8,6 +8,10 @@ const lessonController = require("../controllers/lessonController");
 const { verifyAccessToken, isAdmin } = require("../middleware/jwt");
 const AIController = require('../controllers/AIController');
 const paymentController = require('../controllers/paymentController.js');
+const packageInfoController = require('../controllers/packageInfoController.js');
+const packageController = require('../controllers/packageController.js');
+const supportRequestController = require('../controllers/supportRequestController.js');
+const notificationController = require('../controllers/notificationController.js');
 
 const upload = multer({ dest: "uploads/" });
 
@@ -95,5 +99,36 @@ router.get('/payment/vnpay_ipn', paymentController.vnpayIpn);
 router.post('/payment/create_payment_url', paymentController.createPaymentUrl);
 router.post('/payment/querydr', paymentController.queryTransaction);
 router.post('/payment/refund', paymentController.refundTransaction);
+
+// API Package
+router.get('/package/', packageController.getAllPackages);
+router.get('/package/:id', packageController.getPackageById);
+router.post('/package/create', packageController.createPackage);
+router.post('/package/add', packageController.addPackageToUser);
+router.post('/package/renew', packageController.renewPackage);
+router.put('/package/:id', packageController.updatePackage);
+router.delete('/package/:id', packageController.deletePackage);
+router.delete('/package/:id/remove', packageController.removeUserPackage); // id của User
+
+// API Package Info
+router.get('/packageinfo/', packageInfoController.getAllPackageInfo);
+router.get('/packageinfo/:id', packageInfoController.getPackageInfoById);
+router.post('/packageinfo/create', packageInfoController.createPackageInfo);
+router.put('/packageinfo/:id', packageInfoController.updatePackageInfo);
+router.delete('/packageinfo/:id', packageInfoController.deletePackageInfo);
+
+// API Support Request
+router.get('/supportrequest/', supportRequestController.getAllSupportRequests);
+router.get('/supportrequest/:id', supportRequestController.getSupportRequestById);
+router.post('/supportrequest/create', supportRequestController.createSupportRequest);
+router.put('/supportrequest/:id', supportRequestController.updateSupportRequest);
+router.delete('/supportrequest/:id', supportRequestController.deleteSupportRequest);
+
+// API Notification
+router.get('/', notificationController.getAllNotifications);
+router.get('/:id', notificationController.getNotificationById);
+router.post('/create', notificationController.createNotification);
+router.put('/:id', notificationController.updateNotification);
+router.delete('/:id', notificationController.deleteNotification);
 
 module.exports = router; //export default
