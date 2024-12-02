@@ -39,7 +39,7 @@ const PackageScreen = ( {pkg} ) => {
         },
         body: JSON.stringify({
           amount: amount,
-          bankCode: 'NCB',
+          bankCode: '',
           language: 'vn',
         }),
       });
