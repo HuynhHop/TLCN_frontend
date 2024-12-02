@@ -134,6 +134,10 @@ const Header = () => {
     }
   };
 
+  const handlePackageClick = () => {
+    navigate('/package');
+  };
+
   const closeModal = () => setModalOpen(false);
 
   // CSS-in-JS cho phần giao diện
@@ -157,7 +161,7 @@ const Header = () => {
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    fontSize: '16px',
+    fontSize: '20px',
   };
 
   const brandStyle = {
@@ -258,6 +262,9 @@ const Header = () => {
     <header style={headerStyle}>
       <div style={brandStyle}>SpeechFriend</div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={headerItemStyle} onClick={handlePackageClick}>
+          Package
+        </div>
         <form style={searchStyle} onSubmit={handleSearch} onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}>
           <input

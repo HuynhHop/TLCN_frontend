@@ -37,6 +37,7 @@ const userSchema = new Schema(
     },
     role: { type: Number, ref: "Role", required: true, default: 2 },
     coursesPurchased: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+    package: { type: Schema.Types.ObjectId, ref: 'Package', default: null },
     isBlocked: { type: Boolean, default: false },
     //refreshToken: { type: String },
     passwordChangedAt: { type: String },
