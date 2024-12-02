@@ -93,9 +93,9 @@ router.get("/course/search/:title", [verifyAccessToken], courseController.search
 // API ChatAI
 router.post('/ai/chat', AIController.ChatAI);
 // API ChatHistory
-router.post("/chathistory/save/:userId", chatHistory.saveMessage); // Lưu tin nhắn
-router.get("/chathistory/:userId", chatHistory.getChatHistory); // Lấy lịch sử trò chuyện
-router.delete("/chathistory/:userId", chatHistory.deleteChatHistory); // Xóa toàn bộ lịch sử trò chuyện
+router.post("/chathistory/save/:userId", verifyAccessToken, chatHistory.saveMessage); // Lưu tin nhắn
+router.get("/chathistory/:userId", verifyAccessToken, chatHistory.getChatHistory); // Lấy lịch sử trò chuyện
+router.delete("/chathistory/:userId", verifyAccessToken, chatHistory.deleteChatHistory); // Xóa toàn bộ lịch sử trò chuyện
 
 // API Payment
 router.get('/payment/vnpay_return', paymentController.vnpayIpn);

@@ -6,18 +6,29 @@ import ChatBubble from '../components/ChatBubble';
 import VirtualPerson from '../components/VirtualPerson';
 import '../components/TalkAIScreen.css';
 
+// Tạo một instance axios với Bearer Token
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:8080/v1/api',
+});
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken'); // Lấy token từ localStorage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Thêm Bearer Token vào headers
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 const TalkAIScreen = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
-  // Retrieve userId from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user ? user._id : null; // Assumes the user object contains an _id property
 
-  const [chatBackground, setChatBackground] = useState('#f0f0f0'); // Mặc định là màu xám nhạt
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userId = user ? user._id : null;
 
-  const changeBackground = (bgColor) => {
-    setChatBackground(bgColor);
-  };
-
+  const [chatBackground, setChatBackground] = useState('#f0f0f0');
   const [messages, setMessages] = useState([]);
   const {
     interimTranscript,
@@ -28,11 +39,15 @@ const TalkAIScreen = () => {
 
   const chatboxRef = useRef(null);
 
-  // Hàm fetch lịch sử trò chuyện từ backend
+  const changeBackground = (bgColor) => {
+    setChatBackground(bgColor);
+  };
+
+  // Fetch chat history
   const fetchChatHistory = async () => {
     try {
       if (userId) {
-        const response = await axios.get(`http://localhost:8080/v1/api/chathistory/${userId}`);
+        const response = await axiosInstance.get(`/chathistory/${userId}`);
         if (response.data.success) {
           const chatHistory = response.data.data;
           setMessages(chatHistory);
@@ -43,15 +58,13 @@ const TalkAIScreen = () => {
     }
   };
 
-  // Gọi API lấy lịch sử trò chuyện khi component mount
   useEffect(() => {
     fetchChatHistory();
-  }, []); // Chỉ gọi một lần khi component mount
+  }, []);
 
-  // Xử lý tin nhắn mới của người dùng
   const fetchAIResponse = async (userMessages) => {
     try {
-      const response = await axios.post('http://localhost:8080/v1/api/ai/chat', { messages: userMessages });
+      const response = await axiosInstance.post('/ai/chat', { messages: userMessages });
       if (response.data.success) {
         const botMessage = response.data.botReply;
         setMessages((prevMessages) => [
@@ -59,9 +72,8 @@ const TalkAIScreen = () => {
           { text: botMessage, sender: 'bot' },
         ]);
 
-        // Lưu tin nhắn của bot
         if (userId) {
-          await axios.post(`http://localhost:8080/v1/api/chathistory/save/${userId}`, {
+          await axiosInstance.post(`/chathistory/save/${userId}`, {
             message: botMessage,
             sender: 'bot',
           });
@@ -80,7 +92,6 @@ const TalkAIScreen = () => {
 
   useEffect(() => {
     if (finalTranscript) {
-      // Kiểm tra xem nội dung có phải tiếng Anh hay không (tuỳ chọn)
       const isEnglish = /^[a-zA-Z0-9\s.,!?'"-]*$/.test(finalTranscript);
 
       if (!isEnglish) {
@@ -94,9 +105,8 @@ const TalkAIScreen = () => {
       const userMessage = { text: finalTranscript, sender: 'user' };
       setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-      // Lưu tin nhắn của user
       if (userId) {
-        axios.post(`http://localhost:8080/v1/api/chathistory/save/${userId}`, {
+        axiosInstance.post(`/chathistory/save/${userId}`, {
           message: finalTranscript,
           sender: 'user',
         });
@@ -127,7 +137,6 @@ const TalkAIScreen = () => {
       console.error('Speech synthesis is not supported in this browser.');
     }
   };
-  
 
   const stopSpeaking = () => {
     const synth = window.speechSynthesis;
@@ -141,7 +150,7 @@ const TalkAIScreen = () => {
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
-      language: 'en-US', // Chỉ sử dụng ngôn ngữ tiếng Anh
+      language: 'en-US',
     });
   };
 
@@ -153,8 +162,7 @@ const TalkAIScreen = () => {
     resetTranscript();
     setMessages([]);
     if (userId) {
-      // Xóa lịch sử trò chuyện của user
-      axios.delete(`http://localhost:8080/v1/api/chathistory/${userId}`);
+      axiosInstance.delete(`/chathistory/${userId}`);
     }
   };
 
@@ -176,8 +184,6 @@ const TalkAIScreen = () => {
           ))}
           {interimTranscript && <ChatBubble text={interimTranscript} sender="interim" />}
         </div>
-
-      
 
         <div className="virtual-person right-person">
           <VirtualPerson type="bot" />
@@ -222,5 +228,3 @@ const TalkAIScreen = () => {
 };
 
 export default TalkAIScreen;
-
-
