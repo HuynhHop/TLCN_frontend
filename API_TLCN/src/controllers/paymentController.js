@@ -46,7 +46,8 @@ class PaymentController {
 
             vnpUrl += '?' + qs.stringify(vnp_Params, { encode: false });
             console.log(vnpUrl);
-            res.redirect(vnpUrl);
+            // res.redirect(vnpUrl);
+            res.json({ url: vnpUrl });
         } catch (error) {
             console.error('Error in createPaymentUrl:', error);
             res.status(500).json({ message: 'Create Payment Failed' });
@@ -97,6 +98,9 @@ class PaymentController {
             //let paymentStatus = '1'; // Giả sử '1' là trạng thái thành công bạn cập nhật sau IPN được gọi và trả kết quả về nó
             //let paymentStatus = '2'; // Giả sử '2' là trạng thái thất bại bạn cập nhật sau IPN được gọi và trả kết quả về nó
 
+            let checkOrderId = true; // Mã đơn hàng "giá trị của vnp_TxnRef" VNPAY phản hồi tồn tại trong CSDL của bạn
+            let checkAmount = true; // Kiểm tra số tiền "giá trị của vnp_Amout/100" trùng khớp với số tiền của đơn hàng trong CSDL của bạn
+
             if(secureHash === signed){ //kiểm tra checksum
                 if(checkOrderId){
                     if(checkAmount){
@@ -105,7 +109,11 @@ class PaymentController {
                                 //thanh cong
                                 //paymentStatus = '1'
                                 // Ở đây cập nhật trạng thái giao dịch thanh toán thành công vào CSDL của bạn
-                                res.status(200).json({RspCode: '00', Message: 'Success'})
+                                // res.status(200).json({RspCode: '00', Message: 'Success'})
+                                return res.redirect(
+                                    // `http://localhost:3000/payment-success?transactionId=${vnp_Params['vnp_TransactionNo']}`
+                                    `http://localhost:3000/payment-success`
+                                );
                             }
                             else {
                                 //that bai

@@ -11,7 +11,11 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 //config cors
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Cho phép yêu cầu từ frontend React
+    methods: ['GET', 'POST'],       // Chỉ định các phương thức được phép
+    credentials: true               // Nếu bạn cần gửi cookie hoặc xác thực
+  }));
 
 //config req.body
 app.use(express.json()) // for json

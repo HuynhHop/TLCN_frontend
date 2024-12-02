@@ -193,8 +193,9 @@ class PackageController {
           // Kiểm tra nếu user đã có package và package chưa hết hạn
       if (user.package) {
         const currentPackage = await Package.findById(user.package);
-        if (currentPackage && new Date(currentPackage.expirationDate) > new Date()) {
+        if (currentPackage) {
           return res.status(400).json({
+            success: false,
             message: 'User already has an active package. Cannot add a new package.',
             currentPackage,
           });
@@ -204,7 +205,7 @@ class PackageController {
       // Tính registrationDate và expirationDate
       const registrationDate = new Date();
       const expirationDate = new Date();
-      expirationDate.setDate(registrationDate.getDate() + packageInfo.timeDuration);
+      expirationDate.setDate(registrationDate.getDate() + packageInfo.timeDuration - 1);
   
       // Tạo gói mới
       const newPackage = await Package.create({
@@ -218,6 +219,7 @@ class PackageController {
       await user.save();
   
       res.status(200).json({
+        success: true,
         message: 'Package added to user successfully!',
         user,
         package: newPackage,
@@ -279,7 +281,7 @@ class PackageController {
   
       // Gia hạn thêm thời gian
       const newExpirationDate = new Date(user.package.expirationDate);
-      newExpirationDate.setDate(newExpirationDate.getDate() + packageInfo.timeDuration);
+      newExpirationDate.setDate(newExpirationDate.getDate() + packageInfo.timeDuration - 1);
   
       //user.package.registrationDate = new Date();
       user.package.expirationDate = newExpirationDate;
