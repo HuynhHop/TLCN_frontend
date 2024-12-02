@@ -19,7 +19,7 @@
 import React from 'react';
 import './VirtualPerson.css';
 // Import các ảnh từ thư mục assets
-import userAvatar from '../assets/user.png';
+import userAvatar from '../assets/bot.jpg';
 import botAvatar from '../assets/user.png';
 
 const VirtualPerson = ({ type }) => {

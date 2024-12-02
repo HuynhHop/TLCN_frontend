@@ -7,9 +7,16 @@ import VirtualPerson from '../components/VirtualPerson';
 import '../components/TalkAIScreen.css';
 
 const TalkAIScreen = () => {
+  const [isSpeaking, setIsSpeaking] = useState(false);
   // Retrieve userId from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user ? user._id : null; // Assumes the user object contains an _id property
+
+  const [chatBackground, setChatBackground] = useState('#f0f0f0'); // Mặc định là màu xám nhạt
+
+  const changeBackground = (bgColor) => {
+    setChatBackground(bgColor);
+  };
 
   const [messages, setMessages] = useState([]);
   const {
@@ -73,6 +80,17 @@ const TalkAIScreen = () => {
 
   useEffect(() => {
     if (finalTranscript) {
+      // Kiểm tra xem nội dung có phải tiếng Anh hay không (tuỳ chọn)
+      const isEnglish = /^[a-zA-Z0-9\s.,!?'"-]*$/.test(finalTranscript);
+
+      if (!isEnglish) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: 'Please speak in English.', sender: 'bot' },
+        ]);
+        resetTranscript();
+        return;
+      }
       const userMessage = { text: finalTranscript, sender: 'user' };
       setMessages((prevMessages) => [...prevMessages, userMessage]);
 
@@ -100,14 +118,31 @@ const TalkAIScreen = () => {
     if (synth) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
+      setIsSpeaking(true);
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      };
       synth.speak(utterance);
     } else {
       console.error('Speech synthesis is not supported in this browser.');
     }
   };
+  
+
+  const stopSpeaking = () => {
+    const synth = window.speechSynthesis;
+    if (synth) {
+      synth.cancel();
+      setIsSpeaking(false);
+    }
+  };
 
   const startListening = () => {
-    SpeechRecognition.startListening({ continuous: true, interimResults: true });
+    SpeechRecognition.startListening({
+      continuous: true,
+      interimResults: true,
+      language: 'en-US', // Chỉ sử dụng ngôn ngữ tiếng Anh
+    });
   };
 
   const stopListening = () => {
@@ -135,12 +170,14 @@ const TalkAIScreen = () => {
           <VirtualPerson type="user" />
         </div>
 
-        <div className="chat-box" ref={chatboxRef}>
+        <div className="chat-box" ref={chatboxRef} style={{ backgroundColor: chatBackground }}>
           {messages.map((message, index) => (
             <ChatBubble key={index} text={message.text} sender={message.sender} />
           ))}
           {interimTranscript && <ChatBubble text={interimTranscript} sender="interim" />}
         </div>
+
+      
 
         <div className="virtual-person right-person">
           <VirtualPerson type="bot" />
@@ -154,9 +191,30 @@ const TalkAIScreen = () => {
           >
             🎙️ Hold to Talk
           </button>
-          <button className="reset-button" onClick={handleReset}>
-            Reset
+          <button 
+            className="stop-speaking-button" 
+            onClick={stopSpeaking}
+            disabled={!isSpeaking}
+          >
+            Stop Bot Speaking
           </button>
+          <button className="reset-button" onClick={handleReset}>
+            Clear
+          </button>
+        </div>
+        <div className="background-select">
+          <label htmlFor="background-color" className="background-label">Choose Background Color:</label>
+          <select
+            id="background-color"
+            value={chatBackground}
+            onChange={(e) => changeBackground(e.target.value)}
+            className="background-dropdown"
+          >
+            <option value="#f0f0f0">Default</option>
+            <option value="#d1e7dd">Green</option>
+            <option value="#fde2e4">Pink</option>
+            <option value="#ffffff">White</option>
+          </select>
         </div>
       </div>
     </div>
