@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import ChatBubble from '../components/ChatBubble';
 import VirtualPerson from '../components/VirtualPerson';
 import '../components/TalkAIScreen.css';
+import bgImage from '../assets/ocean.png';
 
 // Tạo một instance axios với Bearer Token
 const axiosInstance = axios.create({
@@ -24,12 +25,12 @@ axiosInstance.interceptors.request.use(
 
 const TalkAIScreen = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [chatBackground, setChatBackground] = useState('#f0f0f0');
+  const [messages, setMessages] = useState([]);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user ? user._id : null;
 
-  const [chatBackground, setChatBackground] = useState('#f0f0f0');
-  const [messages, setMessages] = useState([]);
   const {
     interimTranscript,
     finalTranscript,
@@ -49,8 +50,7 @@ const TalkAIScreen = () => {
       if (userId) {
         const response = await axiosInstance.get(`/chathistory/${userId}`);
         if (response.data.success) {
-          const chatHistory = response.data.data;
-          setMessages(chatHistory);
+          setMessages(response.data.data);
         }
       }
     } catch (error) {
@@ -173,7 +173,14 @@ const TalkAIScreen = () => {
   return (
     <div>
       <Header />
-      <div className="talkai-container">
+      <div
+        className="talkai-container"
+        style={{
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <div className="virtual-person left-person">
           <VirtualPerson type="user" />
         </div>
@@ -197,8 +204,8 @@ const TalkAIScreen = () => {
           >
             🎙️ Hold to Talk
           </button>
-          <button 
-            className="stop-speaking-button" 
+          <button
+            className="stop-speaking-button"
             onClick={stopSpeaking}
             disabled={!isSpeaking}
           >

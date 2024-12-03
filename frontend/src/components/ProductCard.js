@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const ProductCard = ({ title, description, image }) => {  // Rename `images` to `image`
+const ProductCard = ({ title, description, image, courseId }) => {  // Rename `images` to `image`
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
   const productCardStyle = {
     border: '1px solid #ccc',
@@ -69,6 +71,7 @@ const ProductCard = ({ title, description, image }) => {  // Rename `images` to 
         style={isHovered ? buttonHoverStyle : buttonStyle}
         onMouseDown={() => setIsHovered(false)}
         onMouseUp={() => setIsHovered(true)}
+        onClick={() => navigate(`/lessons/${courseId}`)}
       >
         Practice
       </button>
