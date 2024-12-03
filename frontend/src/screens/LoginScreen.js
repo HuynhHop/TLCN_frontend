@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../modals/Modal';
 import '../css/LoginScreen.css';
@@ -11,7 +12,7 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    try {
+    try { 
       const response = await fetch('http://localhost:8080/v1/api/user/login', {
         method: 'POST',
         headers: {
@@ -24,12 +25,18 @@ const LoginScreen = () => {
 
       if (response.ok) {
         localStorage.setItem('accessToken', data.accessToken);
+        const decodedToken = jwtDecode(data.accessToken);
+        const userRole = decodedToken.role;
         setIsModalOpen(true); // Show modal on successful login
 
         // Automatically navigate to home after 3 seconds
         setTimeout(() => {
-          setIsModalOpen(false); // Hide modal
-          navigate('/home');
+          setIsModalOpen(false);
+          if (userRole === 1) {
+            navigate('/admin');
+          } else {
+            navigate('/home');
+          }
         }, 3000);
       } else {
         setError(data.message || 'Login failed');

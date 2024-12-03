@@ -9,6 +9,8 @@ import SearchScreen from './screens/SearchScreen';
 import TalkAIScreen from './screens/TalkAIScreen';
 import PackageScreen from './screens/PackageScreen';
 import PaymentSuccessScreen from './screens/PaymentSuccessScreen';
+import AdminLayout from './admin/Config/AdminLayout';
+
 function App() {
   return (
     <Router>
@@ -22,6 +24,9 @@ function App() {
         <Route path="/package" element={<PackageScreen />} />
         <Route path="/payment-success" element={<PaymentSuccessScreen />} />
         <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
+
+        <Route path="/admin/*" element={<AdminLayout />} />
+
       </Routes>
     </Router>
   );
