@@ -12,6 +12,11 @@ const userSchema = new Schema(
     username: { type: String, maxLength: 255, required: true, unique: true },
     password: { type: String, required: true },
     fullname: { type: String, maxLength: 255, required: true },
+    avatar: {
+      type: String,
+      default: "https://res.cloudinary.com/dvdabwrng/image/upload/v1733216946/admin_nvp8is.jpg",
+    },
+
     email: {
       type: String,
       maxLength: 255,

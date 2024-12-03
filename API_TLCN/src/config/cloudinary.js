@@ -13,7 +13,7 @@ cloudinary.config({
 const excelStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'uploads', // Thư mục lưu trữ trên Cloudinary
+    folder: 'lessons', // Thư mục lưu trữ trên Cloudinary
     allowed_formats: ['xlsx', 'xls'], // Định dạng file Excel cho phép
     resource_type: 'raw', // Raw để lưu file không phải media
   },
