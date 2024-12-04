@@ -2,6 +2,7 @@ const User = require("../models/User");
 var jwt = require("jsonwebtoken");
 var fs = require("fs");
 const crypto = require("crypto");
+const { imageUpload } = require("../config/cloudinary");
 
 const { checkDocumentById } = require("../middleware/checkDocumentMiddleware");
 const {
@@ -69,7 +70,7 @@ class UserController {
       queryCommand
         .skip(skip)
         .limit(limit)
-        .select("-password -role");
+        .select("-password");
 
       const response = await queryCommand.exec();
       const counts = await User.find(formatedQueries).countDocuments();
@@ -111,22 +112,83 @@ class UserController {
   // [POST] /user/register
   async register(req, res) {
     try {
-      const { username, password, fullname, email, phone } = req.body;
+      imageUpload.single('avatar')(req, res, async (err) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            message: 'Error uploading image',
+            error: err.message,
+          });
+        }
 
-      if (!username || !password || !fullname || !email || !phone) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Missing inputs" });
-      }
+        const { username, password, fullname, email, phone } = req.body;
 
-      const user = new User(req.body);
-      const savedUser = await user.save();
+        if (!username || !password || !fullname || !email || !phone) {
+          return res
+            .status(400)
+            .json({ success: false, message: "Missing inputs" });
+        }
 
-      // Trả về tài liệu đã lưu thành công
-      res.status(200).json({
-        success: true,
-        message: "Create User successful",
-        data: savedUser,
+        // Kiểm tra email và phone
+        if (email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            return res.status(400).json({
+              success: false,
+              message: "Invalid email format",
+            });
+          }
+        }
+
+        if (phone) {
+          const phoneRegex = /^\d{10}$/;
+          if (!phoneRegex.test(phone)) {
+            return res.status(400).json({
+              success: false,
+              message: "Invalid phone format. Phone must be 10 digits.",
+            });
+          }
+        }
+
+        // Kiểm tra xem username đã tồn tại chưa
+        let isUsernameExist = await User.findOne({ username });
+        if (isUsernameExist) {
+          return res.status(400).json({
+            success: false,
+            message: "Username already exists.",
+          });
+        }
+
+        let isEmailExist = await User.findOne({ email });
+        if (isEmailExist) {
+          return res.status(400).json({
+            success: false,
+            message: "Email already exists.",
+          });
+        }
+    
+        // Kiểm tra xem phone đã tồn tại chưa
+        let isPhoneExist = await User.findOne({ phone });
+        if (isPhoneExist) {
+          return res.status(400).json({
+            success: false,
+            message: "Phone number already exists.",
+          });
+        }
+
+        if (req.file && req.file.path) {
+          req.body.avatar = req.file.path; // URL ảnh trên Cloudinary
+        }
+
+        const user = new User(req.body);
+        const savedUser = await user.save();
+
+        // Trả về tài liệu đã lưu thành công
+        res.status(200).json({
+          success: true,
+          message: "Create User successful",
+          data: savedUser,
+        });
       });
     } catch (err) {
       console.log(err);
@@ -139,21 +201,62 @@ class UserController {
   //[PUT] /user/
   async update(req, res, next) {
     try {
-      const { _id } = req.user;
-      if (!_id || Object.keys(req.body).length === 0)
-        return res
-          .status(400)
-          .json({ success: false, message: "Missing inputs" });
+      const { _id } = req.user;     
+      const updateData = req.body;
 
-      // Cập nhật user
-      const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
-        new: true,
-      }).select("-password -role");
+      // Kiểm tra nếu không có dữ liệu
+      if (!_id || Object.keys(updateData).length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Missing inputs",
+        });
+      }
 
-      res.status(200).json({
-        success: true,
-        message: "User update successful",
-        updatedUser,
+      // Kiểm tra email và phone
+      if (updateData.email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(updateData.email)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid email format",
+          });
+        }
+      }
+
+      if (updateData.phone) {
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(updateData.phone)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid phone format. Phone must be 10 digits.",
+          });
+        }
+      }
+
+      imageUpload.single('avatar')(req, res, async (err) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            message: 'Error uploading image',
+            error: err.message,
+          });
+        }
+
+        // Nếu có file ảnh, lưu URL vào req.body
+        if (req.file && req.file.path) {
+          req.body.avatar = req.file.path; // URL ảnh trên Cloudinary
+        }
+
+        // Cập nhật user
+        const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
+          new: true,
+        }).select("-password");
+
+        res.status(200).json({
+          success: true,
+          message: "User update successful",
+          updatedUser,
+        });
       });
     } catch (error) {
       res.status(500).json({
@@ -171,15 +274,30 @@ class UserController {
           .status(400)
           .json({ success: false, message: "Missing inputs" });
 
-      // Cập nhật user
-      const updatedUser = await User.findByIdAndUpdate(uid, req.body, {
-        new: true,
-      }).select("-password -role");
+      imageUpload.single('avatar')(req, res, async (err) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            message: 'Error uploading image',
+            error: err.message,
+          });
+        }
 
-      res.status(200).json({
-        success: true,
-        message: "User update successful",
-        updatedUser,
+        // Nếu có file ảnh, lưu URL vào req.body
+        if (req.file && req.file.path) {
+          req.body.avatar = req.file.path; // URL ảnh trên Cloudinary
+        }
+
+        // Cập nhật user
+        const updatedUser = await User.findByIdAndUpdate(uid, req.body, {
+          new: true,
+        }).select("-password -role");
+
+        res.status(200).json({
+          success: true,
+          message: "User update successful",
+          updatedUser,
+        });
       });
     } catch (error) {
       res.status(500).json({
@@ -260,16 +378,36 @@ class UserController {
         return res
           .status(400)
           .json({ success: false, message: "Missing inputs" });
-      let user = await User.findOne({ email });
-      let name = await User.findOne({ username });
+
       // Tạo tài khoản thì ms cần check email exist để loại
       if (action === "CreateAccount"){
-        if (!phone || phone.length !== 10 || isNaN(phone)) {
-          throw new Error("Valid phone number !!!");
+        // Kiểm tra xem username đã tồn tại chưa
+        let isUsernameExist = await User.findOne({ username });
+        if (isUsernameExist) {
+          return res.status(400).json({
+            success: false,
+            message: "Username already exists.",
+          });
         }
-        if (user) throw new Error("User existed !!!");
-        if (name) throw new Error("Username existed !!!");
+
+        let isEmailExist = await User.findOne({ email });
+        if (isEmailExist) {
+          return res.status(400).json({
+            success: false,
+            message: "Email already exists.",
+          });
+        }
+    
+        // Kiểm tra xem phone đã tồn tại chưa
+        let isPhoneExist = await User.findOne({ phone });
+        if (isPhoneExist) {
+          return res.status(400).json({
+            success: false,
+            message: "Phone number already exists.",
+          });
+        }
       }
+
       let otp_code = Math.floor(100000 + Math.random() * 900000);
       otp_code = otp_code.toString();
       const html = `<!DOCTYPE html>
