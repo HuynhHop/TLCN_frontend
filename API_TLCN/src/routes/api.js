@@ -13,10 +13,13 @@ const packageInfoController = require('../controllers/packageInfoController.js')
 const packageController = require('../controllers/packageController.js');
 const supportRequestController = require('../controllers/supportRequestController.js');
 const notificationController = require('../controllers/notificationController.js');
+const { processSpeech } = require('../controllers/speechController.js');
 
 const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
+
+router.post('/word/practice', upload.single('audio'), processSpeech);
 
 // API User
 router.get("/user/getUserToken", verifyAccessToken, userController.getUserFromToken);
