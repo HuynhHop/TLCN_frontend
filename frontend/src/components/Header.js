@@ -262,9 +262,6 @@ const Header = () => {
     <header style={headerStyle}>
       <div style={brandStyle}>SpeechFriend</div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={headerItemStyle} onClick={handlePackageClick}>
-          Package
-        </div>
         <form style={searchStyle} onSubmit={handleSearch} onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}>
           <input
@@ -276,11 +273,14 @@ const Header = () => {
           />
           <FaSearch style={searchIconStyle} onClick={handleSearch} />
         </form>
-        <div style={headerItemStyle} onClick={handleTalkClick}>
-          Talk With AI
-        </div>
         <div style={headerItemStyle} onClick={handleHomeClick}>
           Home
+        </div>
+        <div style={headerItemStyle} onClick={handlePackageClick}>
+          Package
+        </div>
+        <div style={headerItemStyle} onClick={handleTalkClick}>
+          Talk With AI
         </div>
         {/* <div style={headerItemStyle}>My Course</div> */}
         <div style={headerItemStyle} onClick={handleAccountClick}>

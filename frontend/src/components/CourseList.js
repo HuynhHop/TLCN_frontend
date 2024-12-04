@@ -77,6 +77,7 @@ const CourseList = () => {
             title={course.title}
             description={course.description}
             image={getRandomImage()}
+            courseId={course._id}
           />
         </div>
       ))}
