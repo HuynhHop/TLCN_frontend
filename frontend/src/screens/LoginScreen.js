@@ -25,6 +25,8 @@ const LoginScreen = () => {
 
       if (response.ok) {
         localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem("user", JSON.stringify(data.userData));
+        console.log("User data saved to localStorage:", data.userData);
         const decodedToken = jwtDecode(data.accessToken);
         const userRole = decodedToken.role;
         setIsModalOpen(true); // Show modal on successful login

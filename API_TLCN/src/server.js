@@ -1,3 +1,8 @@
+const fetch = require('node-fetch');
+global.fetch = fetch; // Polyfill for Node.js < 18
+global.Headers = fetch.Headers;  // Make Headers available globally
+global.Request = fetch.Request;  // Make Request available globally
+global.Response = fetch.Response;  // Make Response available globally
 require('dotenv').config();
 const express = require('express');
 const configViewEngine = require('./config/viewEngine');

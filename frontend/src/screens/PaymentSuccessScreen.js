@@ -29,7 +29,7 @@ const PaymentSuccessScreen = () => {
                     if (data.success) {
                         // If the API returns success, set success status
                         setPaymentStatus('success');
-                        alert("Gói dịch vụ đã được thêm thành công!");
+                        alert("Đã thêm thành công! Vui lòng đăng nhập lại để sử dụng dịch vụ");
                     } else {
                         // If the API returns failure, set failure status
                         setPaymentStatus('failed');
