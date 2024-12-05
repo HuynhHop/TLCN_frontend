@@ -1,2 +1,0 @@
-API_TLCN/src/models/deepspeech-0.9.3-models.pbmm filter=lfs diff=lfs merge=lfs -text
-API_TLCN/src/models/deepspeech-0.9.3-models.scorer filter=lfs diff=lfs merge=lfs -text

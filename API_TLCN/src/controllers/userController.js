@@ -85,29 +85,38 @@ class UserController {
     }
   }
 
-  //[GET] /user/getUserToken
+  // [GET] /user/getUserToken
   // Sử dụng verifyAccessToken để xác thực trước khi lấy user
   async getUserFromToken(req, res) {
     try {
-      // req.user sẽ chứa dữ liệu người dùng đã được xác thực từ verifyAccessToken
-      const { _id } = req.user; // Giả định bạn lưu ID của người dùng trong token
-      // Lấy thông tin người dùng từ database
-      const user = await User.findById(_id).select("-password "); // Không trả về password
+      // req.user chứa thông tin xác thực từ verifyAccessToken
+      const { _id } = req.user; // ID người dùng từ token
+
+      // Tìm người dùng và populate các trường liên kết
+      const user = await User.findById(_id)
+        .populate({
+          path: "package", // Populate package
+          populate: { path: "packageInfo" }, // Populate thông tin chi tiết của package
+        })
+        .populate("coursesPurchased") // Populate danh sách các khóa học đã mua
+        .select("-password"); // Loại trừ trường password khỏi kết quả
+
       if (!user) {
         return res
           .status(404)
           .json({ success: false, message: "User not found" });
       }
 
-      // Trả về thông tin người dùng
+      // Trả về thông tin đầy đủ của người dùng
       return res.status(200).json({ success: true, user });
     } catch (error) {
+      console.error("Error fetching user data:", error);
       return res
         .status(500)
         .json({ success: false, message: "An error occurred", error });
     }
-    
   }
+
 
   // [POST] /user/register
   async register(req, res) {
