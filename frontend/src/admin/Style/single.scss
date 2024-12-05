@@ -24,7 +24,7 @@
                     top: 15px;
                     right: 20px;
                     padding: 7px 20px;
-                    font-size: 16px;
+                    font-size: 20px;
                     font-weight: 600;
                     color: #7451f8;
                     background-color: #7551f818;
@@ -46,14 +46,16 @@
                     }
 
                     .details{
+                        flex-direction: column;
+                        gap: 30px;
                         .itemTitle{
                             margin-bottom: 10px;
                             color: #616161;
                         }
                         .detailItem{
                             margin-bottom: 10px;
-                            font-size: 14px;
-
+                            font-size: 20px;
+                            
                             .itemkey{
                                 font-weight: bold;
                                 color: #616161;
@@ -74,7 +76,7 @@
         }
 
         .title{
-            font-size: 20px;
+            font-size: 25px;
             margin-bottom: 20px;
             color: gray;
         }
