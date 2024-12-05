@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+API_TLCN/src/models/deepspeech-0.9.3-models.pbmm
+API_TLCN/src/models/deepspeech-0.9.3-models.scorer

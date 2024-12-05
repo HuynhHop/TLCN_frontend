@@ -6,11 +6,15 @@ import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsAc
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import Switch from "@mui/material/Switch";
+import { jwtDecode } from 'jwt-decode';
 import "../Style/navbar.scss";
 import { DarkModeContext } from "../Context/darkModeContext";
 
 const Navbar = () => {
   const { dispatch } = useContext(DarkModeContext);
+  const accessToken = localStorage.getItem('accessToken');
+  const decodedToken = jwtDecode(accessToken);
+  const image = decodedToken.avatar;
   return (
     <div className="navbar">
       <div className="navbarContainer">
@@ -45,7 +49,7 @@ const Navbar = () => {
             <ListOutlinedIcon className="icon" />
           </div>
           <div className="item">
-            <img src="/assets/person.jpg" alt="" className="profileImg" />
+            <img src={image ? image : '/assets/person/DefaultProfile.jpg'} alt="" className="profileImg" />
           </div>
         </div>
       </div>

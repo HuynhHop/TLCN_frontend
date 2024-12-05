@@ -173,7 +173,7 @@ body {
 }
 
 .card:nth-of-type(4):hover .card_inner__circle img {
-  animation: intro 2s forwards;
+  animation: boomerang 2s forwards;
 }
 
 .card_inner__content {
@@ -306,3 +306,20 @@ body {
   }
 }
 
+@keyframes boomerang {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(80px) translateY(-50px) rotate(360deg);
+  }
+  50% {
+    transform: translateX(0) translateY(80px) rotate(720deg);
+  }
+  75% {
+    transform: translateX(-80px) translateY(-50px) rotate(1080deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(1440deg);
+  }
+}

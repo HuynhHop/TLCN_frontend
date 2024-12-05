@@ -14,7 +14,7 @@ const PackageScreen = ( {pkg} ) => {
         "https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/rocket.png", 
         "https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/cog.png",   
         "https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/paperplane.png", 
-        "https://th.bing.com/th/id/OIP.on_lU6Ig04Gz78HBF9N9JwAAAA?rs=1&pid=ImgDetMain", 
+        "https://res.cloudinary.com/dvdabwrng/image/upload/v1733287161/boomerang_fjpvbn.png", 
     ],
     imgHeader: [
         "http://www.pixeden.com/media/k2/galleries/343/002-city-vector-background-town-vol2.jpg",
@@ -27,6 +27,12 @@ const PackageScreen = ( {pkg} ) => {
   // Hàm gọi API createPaymentUrl và chuyển hướng đến trang thanh toán
   const handleBuyNow = async (pkg) => {
     try {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        if (userData && userData.package !== null) {
+          alert('You already have a service package. You cannot purchase additional packages!');
+          return;
+        }
+
       localStorage.setItem("packageInfoId", pkg._id);
       // Lấy giá trị giá tiền của gói
       const amount = pkg.price;

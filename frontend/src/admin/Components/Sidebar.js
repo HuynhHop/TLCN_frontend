@@ -76,25 +76,33 @@ const Sidebar = () => {
             </li>
           </Link>
 
-          <li>
-            <CreditCardOutlinedIcon className="icon" />
-            <span>Course</span>
-          </li>
+          <Link to="/admin/courses" style={{ textDecoration: "none" }}>
+            <li>
+              <CreditCardOutlinedIcon className="icon" />
+              <span>Courses</span>
+            </li>
+          </Link>
 
-          <li>
-            <CreditCardOutlinedIcon className="icon" />
-            <span>Package Information</span>
-          </li>
+          <Link to="/admin/packageinfors" style={{ textDecoration: "none" }}>
+            <li>
+              <CreditCardOutlinedIcon className="icon" />
+              <span>Package Informations</span>
+            </li>
+          </Link>
+          
+          <Link to="/admin/packages" style={{ textDecoration: "none" }}>
+            <li>
+              <CreditCardOutlinedIcon className="icon" />
+              <span>Packages</span>
+            </li>
+          </Link>
 
-          <li>
-            <CreditCardOutlinedIcon className="icon" />
-            <span>Package</span>
-          </li>
-
-          <li>
-            <NotificationsActiveOutlinedIcon className="icon" />
-            <span>Notifications</span>
-          </li>
+          <Link to="/admin/notifications" style={{ textDecoration: "none" }}>
+            <li>
+              <NotificationsActiveOutlinedIcon className="icon" />
+              <span>Notifications</span>
+            </li>
+          </Link>
 
           <li>
             <InsertChartOutlinedSharpIcon className="icon" />

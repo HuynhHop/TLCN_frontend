@@ -595,7 +595,7 @@ class UserController {
         // Phải dùng (plain Obj) để đưa instance mongooseDB về thành object thường
         const { password, role, ...userData } = response.toObject();
         //Tạo accessToken
-        const accessToken = generateAccessToken(response._id, role);
+        const accessToken = generateAccessToken(response._id, role, response.avatar);
 
         return res.status(200).json({ success: true, accessToken, userData });
       } else {
