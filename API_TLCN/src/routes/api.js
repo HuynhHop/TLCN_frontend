@@ -22,6 +22,7 @@ const router = express.Router();
 router.post('/word/practice', upload.single('audio'), processSpeech);
 
 // API User
+router.get("/user/count", userController.countUsers);
 router.get("/user/getUserToken", verifyAccessToken, userController.getUserFromToken);
 router.get("/user/forgotPassword", userController.forgotPassword);
 router.get("/user/editProfileSendOTP", userController.editProfileSendOTP);
@@ -110,6 +111,8 @@ router.post('/payment/refund', paymentController.refundTransaction);
 
 // API Package
 router.get('/package/', packageController.getAllPackages);
+router.get('/package/calculateTotalPrice', packageController.calculateTotalPrice);
+router.get('/package/count', packageController.getPackageCount);
 router.get('/package/:id', packageController.getPackageById);
 router.post('/package/create', packageController.createPackage);
 router.post('/package/add', packageController.addPackageToUser);

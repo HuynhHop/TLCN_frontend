@@ -3,6 +3,59 @@ const PackageInfo = require('../models/PackageInfo');
 const Package = require('../models/Package');
 
 class PackageController {
+  
+  async calculateTotalPrice(req, res) {
+    try {
+      const result = await Package.aggregate([
+        {
+          $lookup: {
+            from: "packageinfos", // MongoDB collection name for PackageInfo
+            localField: "packageInfo", // Field in Package referencing PackageInfo
+            foreignField: "_id", // Field in PackageInfo
+            as: "packageInfoDetails", // Merged field name
+          },
+        },
+        { $unwind: "$packageInfoDetails" }, // Decompose array to objects
+        {
+          $group: {
+            _id: null, // Group all documents together
+            totalPrice: { $sum: "$packageInfoDetails.price" }, // Sum up prices
+          },
+        },
+      ]);
+
+      if (!result || result.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No packages found to calculate total price.",
+        });
+      }
+
+      const totalPrice = result[0].totalPrice;
+
+      res.json({
+        success: true,
+        data: { totalPrice },
+      });
+    } catch (error) {
+      console.error("Error calculating total price:", error);
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while calculating the total price.",
+      });
+    }
+  }
+
+  // [GET] /package/count
+  async getPackageCount(req, res) {
+    try {
+      const packageCount = await Package.countDocuments();
+      res.json({ success: true, data: { packageCount } });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
   // [POST] /package/create
   async createPackage(req, res) {
     const { registrationDate, expirationDate, isRenewal, packageInfo } = req.body;
