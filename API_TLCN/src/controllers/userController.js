@@ -761,6 +761,21 @@ class UserController {
       next(error);
     }
   }
+
+  // [GET] /user/count
+  async countUsers(req, res, next) {
+    try {
+      // Đếm số lượng users trong collection
+      const userCount = await User.countDocuments();
+      res.status(200).json({
+        success: true,
+        message: "Count retrieved successfully",
+        data: { userCount },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new UserController();

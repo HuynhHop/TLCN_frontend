@@ -94,35 +94,38 @@ const Header = () => {
     navigate('/'); // Navigate to /home route
   };
 
-  const handleTalkClick = async () => {
-    const packageId = JSON.parse(localStorage.getItem('user'))?.package;
+  // const handleTalkClick = async () => {
+  //   const packageId = JSON.parse(localStorage.getItem('user'))?.package;
   
-    if (!packageId) {
-      alert('Bạn cần đăng ký gói để truy cập nội dung.');
-      return;
-    }
+  //   if (!packageId) {
+  //     alert('Bạn cần đăng ký gói để truy cập nội dung.');
+  //     return;
+  //   }
   
-    try {
-      const response = await fetch(`http://localhost:8080/v1/api/package/${packageId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  //   try {
+  //     const response = await fetch(`http://localhost:8080/v1/api/package/${packageId}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
   
-      const data = await response.json();
+  //     const data = await response.json();
   
-      if (response.ok && data.success) {
-        navigate('/talkai');
-      } else {
-        alert('Bạn cần đăng ký gói để truy cập nội dung.');
-      }
-    } catch (error) {
-      console.error('Error fetching package:', error);
-      alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
-    }
+  //     if (response.ok && data.success) {
+  //       navigate('/talkai');
+  //     } else {
+  //       alert('Bạn cần đăng ký gói để truy cập nội dung.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching package:', error);
+  //     alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+  //   }
+  // };
+  
+  const handleTalkClick = () => {
+    navigate('/talkai'); // Navigate to /home route
   };
-  
 
   const handleSearch = async (event) => {
     event.preventDefault();
