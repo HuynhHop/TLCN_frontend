@@ -47,11 +47,10 @@ const TalkAIScreen = () => {
   // Fetch chat history
   const fetchChatHistory = async () => {
     try {
-      if (userId) {
-        const response = await axiosInstance.get(`/chathistory/${userId}`);
-        if (response.data.success) {
-          setMessages(response.data.data);
-        }
+      if (!userId) return; 
+      const response = await axiosInstance.get(`/chathistory/${userId}`);
+      if (response.data.success) {
+        setMessages(response.data.data);
       }
     } catch (error) {
       console.error('Error fetching chat history:', error);
