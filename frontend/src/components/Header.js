@@ -77,6 +77,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
     setUser(null); // Xóa dữ liệu người dùng khi đăng xuất
     navigate('/login');
   };
@@ -139,7 +140,6 @@ const Header = () => {
       const response = await fetch(`http://localhost:8080/v1/api/course/search/${encodeURIComponent(searchQuery)}`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           'Content-Type': 'application/json',
         },
       });

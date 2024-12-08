@@ -81,19 +81,33 @@
 
 // export default ProductCard;
 
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ title, description, image, courseId }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   // Lấy packageId từ localStorage
   const packageId = JSON.parse(localStorage.getItem('user'))?.package;
-  console.log("packageId: ", packageId)
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userId = user?._id;
+
+  // useEffect(() => {
+  //   // Nếu không có user trong localStorage, hiển thị modal
+  //   if (!user) {
+  //     setShowModal(true);
+  //   }
+  // }, [user]);
 
   const checkPackageAndNavigate = async () => {
+    if (!user)
+    {
+      setShowModal(true);
+      return;
+    }
     if (!packageId) {
       setErrorMessage('Bạn cần đăng ký gói để truy cập nội dung.');
       return;
@@ -119,6 +133,11 @@ const ProductCard = ({ title, description, image, courseId }) => {
       console.error('Error fetching package:', error);
       setErrorMessage('Có lỗi xảy ra. Vui lòng thử lại sau.');
     }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate('/login');
   };
 
   const productCardStyle = {
@@ -192,6 +211,32 @@ const ProductCard = ({ title, description, image, courseId }) => {
         Practice
       </button>
       {errorMessage && <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>}
+      {showModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            zIndex: 1000,
+          }}
+        >
+          <p style={{ marginBottom: '20px' }}>Please sign in to continue.</p>
+          <button
+            style={{
+              ...buttonStyle,
+              backgroundColor: '#007BFF',
+            }}
+            onClick={handleModalClose}
+          >
+            Sign in
+          </button>
+        </div>
+      )}
     </div>
   );
 };
