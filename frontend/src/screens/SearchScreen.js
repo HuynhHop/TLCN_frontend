@@ -14,6 +14,7 @@ const SearchScreen = () => {
   const [error, setError] = useState(null);
   const location = useLocation();
   const results = location.state?.results || JSON.parse(localStorage.getItem('searchResults')) || [];
+  console.log("results", results)
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -153,12 +154,14 @@ const SearchScreen = () => {
           <div>{error}</div>
         ) : (
           courses.map((course) => (
-            <ProductCard
-              key={course._id}
-              title={course.title}
-              description={course.description}
-              image={getRandomImage()}
-            />
+            <div key={course._id}>
+              <ProductCard
+                title={course.title}
+                description={course.description}
+                image={getRandomImage()}
+                courseId={course._id}
+              />
+            </div>
           ))
         )}
       </div>

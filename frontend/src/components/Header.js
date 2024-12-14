@@ -82,6 +82,10 @@ const Header = () => {
     navigate('/login');
   };
 
+  const handleEdit = () => {
+    navigate('/detailuser');
+  };
+
   const handleAccountClick = () => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
@@ -94,35 +98,6 @@ const Header = () => {
   const handleHomeClick = () => {
     navigate('/'); // Navigate to /home route
   };
-
-  // const handleTalkClick = async () => {
-  //   const packageId = JSON.parse(localStorage.getItem('user'))?.package;
-  
-  //   if (!packageId) {
-  //     alert('Bạn cần đăng ký gói để truy cập nội dung.');
-  //     return;
-  //   }
-  
-  //   try {
-  //     const response = await fetch(`http://localhost:8080/v1/api/package/${packageId}`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  
-  //     const data = await response.json();
-  
-  //     if (response.ok && data.success) {
-  //       navigate('/talkai');
-  //     } else {
-  //       alert('Bạn cần đăng ký gói để truy cập nội dung.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching package:', error);
-  //     alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
-  //   }
-  // };
   
   const handleTalkClick = () => {
     navigate('/talkai'); // Navigate to /home route
@@ -242,7 +217,7 @@ const Header = () => {
   const dropdownButtonStyle = {
     width: '100%',
     padding: '10px 0',
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#339900',
     color: '#ffffff',
     border: 'none',
     borderRadius: '5px',
@@ -252,6 +227,7 @@ const Header = () => {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'background-color 0.3s ease',
+    margin: '10px 0',
   };
 
   const searchStyle = {
@@ -320,11 +296,11 @@ const Header = () => {
               {user ? (
                 <>
                   <div style={dropdownHeaderStyle}>
-                    <img
-                      src= {userAvatar}
-                      alt="User Avatar"
-                      style={avatarStyle}
-                    />
+                  <img
+                    src={user.avatar || 'default-avatar-url'}
+                    alt="User Avatar"
+                    style={avatarStyle}
+                  />
                     <div>
                       <h3 style={{ margin: 0 }}>{user.fullname}</h3>
                       <p style={{ margin: 0, fontSize: '14px', color: '#777' }}>{user.email}</p>
@@ -337,9 +313,17 @@ const Header = () => {
                   </div>
                   <button
                     style={dropdownButtonStyle}
+                    onClick={handleEdit}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#6666FF'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#336699'}
+                  >
+                    <FaUserCircle style={{ marginRight: '8px' }} /> Edit
+                  </button>
+                  <button
+                    style={dropdownButtonStyle}
                     onClick={handleLogout}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#66FF33'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#66FF00'}
                   >
                     <FaSignOutAlt style={{ marginRight: '8px' }} /> Logout
                   </button>

@@ -2,6 +2,7 @@ const User = require("../models/User");
 var jwt = require("jsonwebtoken");
 var fs = require("fs");
 const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 const { imageUpload } = require("../config/cloudinary");
 
 const { checkDocumentById } = require("../middleware/checkDocumentMiddleware");
@@ -207,19 +208,69 @@ class UserController {
     }
   }
 
+  // [PUT] /user/update-password
+  async updatePassword(req, res, next) {
+    try {
+      const { _id, oldPassword, newPassword, confirmPassword } = req.body;
+
+      // Kiểm tra tất cả các trường
+      if (!oldPassword || !newPassword || !confirmPassword || !_id) {
+        return res.status(400).json({
+          success: false,
+          message: "All fields (oldPassword, newPassword, confirmPassword, _id) are required.",
+        });
+      }
+
+      // Kiểm tra xác nhận mật khẩu
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({
+          success: false,
+          message: "New password and confirmation password do not match.",
+        });
+      }
+
+      // Tìm người dùng theo ID
+      const user = await User.findById(_id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found.",
+        });
+      }
+
+      // Kiểm tra mật khẩu cũ
+      const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
+      if (!isOldPasswordValid) {
+        return res.status(400).json({
+          success: false,
+          message: "Old password is incorrect.",
+        });
+      }
+
+      // Mã hóa mật khẩu mới
+      const hashedNewPassword = newPassword;
+
+      // Cập nhật mật khẩu mới
+      user.password = hashedNewPassword;
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password updated successfully.",
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "An error occurred: " + error.message,
+      });
+    }
+  }
+
   //[PUT] /user/
   async update(req, res, next) {
     try {
       const { _id } = req.user;     
       const updateData = req.body;
-
-      // Kiểm tra nếu không có dữ liệu
-      if (!_id || Object.keys(updateData).length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: "Missing inputs",
-        });
-      }
 
       // Kiểm tra email và phone
       if (updateData.email) {
@@ -655,108 +706,117 @@ class UserController {
   }
 
   //[GET] /forgotPassword/:email
+  // [POST] /forgotPassword
   async forgotPassword(req, res, next) {
     try {
-      const { email } = req.query;
+      const { email } = req.body; // Step 1: Request OTP
       if (!email)
         return res
           .status(400)
-          .json({ success: false, message: "Missing inputs" });
+          .json({ success: false, message: "Missing email input" });
+
       const user = await User.findOne({ email });
       if (!user) throw new Error("User not found with this email");
-      const resetToken = user.createPasswordChangeToken();
+
+      // Generate OTP
+      let otp_code = Math.floor(100000 + Math.random() * 900000);
+      otp_code = otp_code.toString();
+
+      // Store OTP with expiration time (15 minutes)
+      user.passwordReset = otp_code;
+      user.passwordResetExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
       await user.save();
 
+      // HTML email content
       const html = `<!DOCTYPE html>
-            <html lang="vi">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Xác nhận OTP</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        font-size: 14px;
-                        color: #333333;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .container {
-                        max-width: 600px;
-                        margin: 0 auto;
-                        border: 5px solid #39c6b9;
-                        border-radius: 10px;
-                    }
-                    .content {
-                        padding: 20px;
-                    }
-                    h1 {
-                        color: #39c6b9;
-                    }
-                    p {
-                        line-height: 1.5;
-                    }
-                    a {
-                        color: #0099ff;
-                        text-decoration: none;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="content">
-                        <h1>Speaking English</h1>
-                        <p>Xin chào, <span style="font-weight: bold;">${user?.username}</span>!</p>
-                        <p>Xin vui lòng click vào đường link dưới đây để thay đổi mật khẩu của bạn.</p>
-                        <p>Link này sẽ hết hạn sau 15 phút kể từ bây giờ. </p>
-                        <strong style="color: #da4f25;"><a href=${process.env.URL_SERVER}/user/resetPassword/${resetToken}>Click here</a></strong>
-                        <p>Cảm ơn bạn đã tin tưởng sử dụng web của chúng tôi!</p>
-                        <p>Trân trọng,</p>
-                        <p>D&H</p>
-                    </div>
+        <html lang="vi">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Xác nhận OTP</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                    color: #333333;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    border: 5px solid #39c6b9;
+                    border-radius: 10px;
+                }
+                .content {
+                    padding: 20px;
+                }
+                h1 {
+                    color: #39c6b9;
+                }
+                p {
+                    line-height: 1.5;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="content">
+                    <h1>Speaking English</h1>
+                    <p>Xin chào,</p>
+                    <p>Đây là mã OTP của bạn để đặt lại mật khẩu:</p>
+                    <strong style="color: #da4f25;">OTP: ${otp_code}</strong>
+                    <p>Mã OTP này sẽ hết hạn sau 15 phút.</p>
+                    <p>Cảm ơn bạn đã tin tưởng sử dụng web của chúng tôi!</p>
+                    <p>Trân trọng,</p>
+                    <p>D&H</p>
                 </div>
-            </body>
-            </html>`;
+            </div>
+        </body>
+        </html>`;
+
       const data = {
         email,
         html,
       };
-      const result = await sendMail("Forgot password", data);
-      res.status(200).json({ success: true, result });
+
+      // Send the email
+      const result = await sendMail("Reset Password OTP", data);
+
+      res.status(200).json({ success: true, message: "OTP sent successfully", result });
     } catch (error) {
       next(error);
     }
   }
 
-  //[PUT] /resetPassword/
+  // [POST] /resetPassword
   async resetPassword(req, res, next) {
     try {
-      const { resetToken, newPassword } = req.body;
-      if (!resetToken || !newPassword)
+      const { email, passwordReset, newPassword, confirmPassword } = req.body; // Step 2: Verify and reset password
+      if (!email || !passwordReset || !newPassword || !confirmPassword)
         return res
           .status(400)
           .json({ success: false, message: "Missing inputs" });
 
-      const passwordResetToken = crypto
-        .createHash("sha256")
-        .update(resetToken)
-        .digest("hex");
-      const user = await User.findOne({
-        passwordResetToken,
-        //kiểm tra xem thời gian reset Password có lớn hơn tg hiện tại ko
-        // có thì mới tìm thấy user để đổi pass
-        passwordResetExpires: { $gt: Date.now() },
-      });
-      if (!user) throw new Error("Invalid reset token");
+      if (newPassword !== confirmPassword)
+        return res
+          .status(400)
+          .json({ success: false, message: "Passwords do not match" });
+
+      const user = await User.findOne({ email });
+      if (!user) throw new Error("User not found with this email");
+
+      // Check if OTP matches and is not expired
+      if (user.passwordReset !== passwordReset || Date.now() > user.passwordResetExpiry)
+        return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+
+      // Update the user's password
       user.password = newPassword;
-      user.passwordChangedAt = Date.now();
-      user.passwordResetExpires = undefined;
-      user.passwordResetToken = undefined;
+      user.passwordReset = null; // Clear the OTP after successful reset
+      user.passwordResetExpiry = null; // Clear OTP expiry
       await user.save();
-      res.status(200).json({
-        success: user ? true : false,
-        message: user ? "Updated Password" : "Something went wrong !!",
-      });
+
+      res.status(200).json({ success: true, message: "Password reset successfully" });
     } catch (error) {
       next(error);
     }
