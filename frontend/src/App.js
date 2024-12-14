@@ -12,6 +12,9 @@ import PaymentSuccessScreen from './screens/PaymentSuccessScreen';
 import LessonScreen from './screens/LessonScreen';
 import LessonDetailScreen from './screens/LessonDetailScreen';
 import AdminLayout from './admin/Config/AdminLayout';
+import ForgotPassScreen from './screens/ForgotPassScreen';
+import ResetPassScreen from './screens/ResetPassScreen';
+import DetailUserScreen from './screens/DetailUserScreen';
 
 function App() {
   return (
@@ -21,7 +24,10 @@ function App() {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
+        <Route path="/forgot-password" element={<ForgotPassScreen/>} />
+        <Route path="/reset-password" element={<ResetPassScreen/>} />
         <Route path="/search-results" element={<SearchScreen />} />
+        <Route path="/detailuser" element={<DetailUserScreen />} />
         <Route path="/talkai" element={<TalkAIScreen />} />
         <Route path="/lessons/:courseId" element={<LessonScreen />} />
         <Route path="/lesson/:lessonId" element={<LessonDetailScreen />} />

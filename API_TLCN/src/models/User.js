@@ -45,9 +45,11 @@ const userSchema = new Schema(
     package: { type: Schema.Types.ObjectId, ref: 'Package', default: null },
     isBlocked: { type: Boolean, default: false },
     //refreshToken: { type: String },
-    passwordChangedAt: { type: String },
-    passwordResetToken: { type: String },
-    passwordResetExpires: { type: String },
+    passwordReset: { type: String, default: null },
+    passwordResetExpiry: { type: Date, default: null },
+    // passwordChangedAt: { type: String },
+    // passwordResetToken: { type: String },
+    // passwordResetExpires: { type: String },
   },
 
   { timestamps: true }

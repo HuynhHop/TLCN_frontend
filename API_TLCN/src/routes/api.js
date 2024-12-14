@@ -22,9 +22,10 @@ const router = express.Router();
 router.post('/word/practice', upload.single('audio'), processSpeech);
 
 // API User
+router.put("/user/update-password", userController.updatePassword);
 router.get("/user/count", userController.countUsers);
 router.get("/user/getUserToken", verifyAccessToken, userController.getUserFromToken);
-router.get("/user/forgotPassword", userController.forgotPassword);
+router.post("/user/forgotPassword", userController.forgotPassword);
 router.get("/user/editProfileSendOTP", userController.editProfileSendOTP);
 router.post("/user/sendOTP", userController.sendOTP);
 router.get("/user/resetPassword/:resetToken", userController.getResetToken);
@@ -36,7 +37,7 @@ router.post("/user/register", userController.register);
 router.post("/user/login", userController.login);
 
 router.put("/user/refreshAccessToken", userController.refreshAccessToken);
-router.put("/user/resetPassword", userController.resetPassword);
+router.post("/user/resetPassword", userController.resetPassword);
 router.put("/user/:uid", verifyAccessToken, isAdmin, userController.updateByAdmin);
 router.put("/user/", verifyAccessToken, userController.update);
 
