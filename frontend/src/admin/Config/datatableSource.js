@@ -27,6 +27,11 @@ export const userColumns = [
     headerName: "Fullname",
     width: 160,
   },
+  {
+    field: "role",
+    headerName: "Role",
+    width: 160,
+  },
 ];
 
 // export const productColumns = [

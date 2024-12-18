@@ -1,0 +1,55 @@
+.editPackageInfo {
+    display: flex;
+    .editPackageInfoContainer {
+      flex: 6;
+      color: #616161;
+      flex-direction: column;
+      width: 80%;
+      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    .editForm {
+      margin-top: 20px;
+      padding: 20px;
+      h1 {
+        font-size: 24px;
+        color: #333;
+      }
+  
+      .formGroup {
+        margin-bottom: 20px;
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-size: 18px;
+          color: #666;
+        }
+        input,
+        textarea {
+          width: 100%;
+          padding: 10px;
+          font-size: 14px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+        textarea {
+          resize: vertical;
+          height: 100px;
+        }
+      }
+  
+      .submitButton {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        &:hover {
+          background-color: #45a049;
+        }
+      }
+    }
+  }  

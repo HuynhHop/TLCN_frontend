@@ -55,7 +55,7 @@ const DetailUser = () => {
         <div className="top">
           <div className="left">
             <h1 className="title">Information</h1>
-            <span className="editButton">Edit</span>
+            {/* <span className="editButton">Edit</span> */}
 
           <div className="item">
             <img 

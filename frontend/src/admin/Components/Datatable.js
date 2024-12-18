@@ -58,7 +58,16 @@ const Datatable = () => {
             id: user._id,
             ...user,
           }));
-          setData(formattedData);
+          const sortedData = formattedData.sort((a, b) => {
+            if (a.role === 2 && b.role === 1) {
+              return -1; 
+            } else if (a.role === 1 && b.role === 2) {
+              return 1; 
+            } else {
+              return 0; 
+            }
+          });
+          setData(sortedData);
         } else {
           setError("No data available");
         }

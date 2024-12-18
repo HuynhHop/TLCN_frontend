@@ -66,7 +66,7 @@ class UserController {
       // +'2' => 2
       // +'asdasd' => NaN
       const page = +req.query.page || 1;
-      const limit = +req.query.limit || 10;
+      const limit = +req.query.limit || 100;
       const skip = (page - 1) * limit;
       queryCommand
         .skip(skip)

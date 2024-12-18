@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Sidebar from "../Components/Sidebar";
 import Navbar from "../Components/Navbar";
 import Chart from "../Config/Chart";
@@ -55,7 +55,9 @@ const DetailPackageInfo = () => {
         <div className="top">
           <div className="left">
             <h1 className="title">Information</h1>
-            <span className="editButton">Edit</span>
+            <Link to={`/admin/packageinfors/${packageinforId}/edit`} style={{ textDecoration: "none" }}>
+              <span className="editButton">Edit</span>
+            </Link> 
             <div className="item">
               <div className="details">
                 <h1 className="itemTitle">{packageData?.packageName || "Unknown Package"}</h1>
@@ -83,7 +85,7 @@ const DetailPackageInfo = () => {
             </div>      
           </div>
           <div className="right">
-            <Chart aspect={3 / 1} title="Users Spending ( Last 6 Months )" />
+            <Chart aspect={3 / 1} title="Package Spending ( Last 6 Months )" />
           </div>
         </div>
         <div className="bottom">

@@ -86,15 +86,15 @@ const Packagetable = () => {
     { field: 'id', headerName: 'ID', width: 250 },
     { field: 'registrationDate', headerName: 'Registration Date', width: 250 },
     { field: 'expirationDate', headerName: 'Expiration Date', width: 250 },
-    { field: 'isRenewal', headerName: 'Renewal', width: 150 ,  
-      renderCell: (params) => {
-        return (
-          <div className={`cellWithStatus ${params.row.isRenewal} ? 'true' : 'false'`}>
-            {params.row.isRenewal ? 'True' : 'False'}
-          </div>
-        );
-      },
-    },
+    // { field: 'isRenewal', headerName: 'Renewal', width: 150 ,  
+    //   renderCell: (params) => {
+    //     return (
+    //       <div className={`cellWithStatus ${params.row.isRenewal} ? 'true' : 'false'`}>
+    //         {params.row.isRenewal ? 'True' : 'False'}
+    //       </div>
+    //     );
+    //   },
+    // },
     { field: 'packageInfo', headerName: 'Package Information', width: 250,
       renderCell: (params) => {
         const { packageName } = params.row.packageInfo || {};
@@ -113,9 +113,9 @@ const Packagetable = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to={`/admin/packages/${params.row.id}/edit`} style={{ textDecoration: "none" }}>
-              <div className="viewButton">Edit</div>
-            </Link>
+            {/* <Link to={`/admin/packages/${params.row.id}/edit`} style={{ textDecoration: "none" }}>
+              <div className="viewButton">Renewal</div>
+            </Link> */}
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}

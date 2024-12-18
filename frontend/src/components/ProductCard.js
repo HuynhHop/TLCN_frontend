@@ -108,13 +108,12 @@ const ProductCard = ({ title, description, image, courseId }) => {
       setShowModal(true);
       return;
     }
-    if (!packageId) {
+    if (!user.package) {
       setErrorMessage('Bạn cần đăng ký gói để truy cập nội dung.');
       return;
     }
-
     try {
-      const response = await fetch(`http://localhost:8080/v1/api/package/${packageId}`, {
+      const response = await fetch(`http://localhost:8080/v1/api/package/${user.package._id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +126,7 @@ const ProductCard = ({ title, description, image, courseId }) => {
         // Package tồn tại, điều hướng đến lessons
         navigate(`/lessons/${courseId}`);
       } else {
-        setErrorMessage('Bạn cần đăng ký gói để truy cập nội dung.');
+        setErrorMessage('Bạn cần đăng ký gói để truy cập nội dung');
       }
     } catch (error) {
       console.error('Error fetching package:', error);

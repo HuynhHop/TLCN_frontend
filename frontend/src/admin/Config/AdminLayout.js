@@ -13,6 +13,10 @@ import ManagerCourse from "../Screens/ManagerCourse";
 import ManagerPackgeInfor from "../Screens/ManagerPackageInfor";
 import ManagerPackge from "../Screens/ManagerPackage";
 import DetailPackageInfo from "../Screens/DetailPackageInfo";
+import EditCourse from "../Screens/EditCourse";
+import AddLessonToCourse from "../Screens/AddLessontoCourse";
+import EditLesson from "../Screens/EditLesson";
+import EditPackageInfo from "../Screens/EditPackageInfo";
 
 const AdminLayout = () => {
   const { darkMode } = useContext(DarkModeContext);
@@ -23,16 +27,22 @@ const AdminLayout = () => {
         <Route path="" element={<Home />} />
         <Route path="users" element={<ManagerUser />} />
         <Route path="users/:userId" element={<DetailUser />} />
-        <Route path="users/userId/new" element={<New inputs={userInputs} title={"Add New User"} />} />
+        <Route path="users/:userId/new" element={<New inputs={userInputs} title={"Add New User"} />} />
+
         <Route path="lessons" element={<ManagerLesson />} />
-        {/* <Route path="lessons/:lessonId/edit" element={<DetailLesson />} /> */}
-        <Route path="lessons/lessonId/new" element={<New inputs={lessonInputs} title={"Add New Lesson"} />} />
+        <Route path="lessons/:lessonId/edit" element={<EditLesson />} />
+        <Route path="lessons/:lessonId/new" element={<New inputs={lessonInputs} title={"Add New Lesson"} />} />
+
         <Route path="courses" element={<ManagerCourse />} />
-        {/* <Route path="courses/:courseId/edit" element={<DetailCourse />} /> */}
-        <Route path="courses/courseid/new" element={<New inputs={courseInputs} title={"Add New Course"} />} />
+        <Route path="courses/:courseId/edit" element={<EditCourse />} />
+        <Route path="courses/:courseId/new" element={<New inputs={courseInputs} title={"Add New Course"} />} />
+        <Route path="courses/:courseId/addlesson" element={<AddLessonToCourse />} />
+
         <Route path="packageinfors" element={<ManagerPackgeInfor />} />
         <Route path="packageinfors/:packageinforId" element={<DetailPackageInfo />} />
-        <Route path="packageinfors/packageinforId/new" element={<New inputs={packageInputs} title={"Add New Package Information"} />} />
+        <Route path="packageinfors/:packageinforId/edit" element={<EditPackageInfo />} />
+        <Route path="packageinfors/:packageinforId/new" element={<New inputs={packageInputs} title={"Add New Package Information"} />} />
+
         <Route path="packages" element={<ManagerPackge />} />
         {/* <Route path="packages/:packageId/edit" element={<DetailPackage />} /> */}
       </Routes>

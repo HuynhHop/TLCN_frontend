@@ -44,7 +44,7 @@ const Header = () => {
 
       if (data.success) {
         // Lưu thông tin người dùng vào localStorage
-        // localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(data.user));
         // console.log("User data saved to localStorage:", data.user);
         setUser(data.user);
       } else {
@@ -96,11 +96,18 @@ const Header = () => {
   };
 
   const handleHomeClick = () => {
+    getUserFromToken();
     navigate('/'); // Navigate to /home route
   };
   
   const handleTalkClick = () => {
-    navigate('/talkai'); // Navigate to /home route
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      navigate('/talkai');
+    } else {
+      setModalOpen(true); // Hiển thị modal nếu chưa đăng nhập
+    }
+    // navigate('/talkai'); // Navigate to /talkai route
   };
 
   const handleSearch = async (event) => {
@@ -139,7 +146,13 @@ const Header = () => {
   };
 
   const handlePackageClick = () => {
-    navigate('/package');
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      navigate('/package');
+    } else {
+      setModalOpen(true); // Hiển thị modal nếu chưa đăng nhập
+    }
+    // navigate('/package');
   };
 
   const closeModal = () => setModalOpen(false);

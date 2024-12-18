@@ -50,7 +50,7 @@ class courseController {
   // [PUT] /course/:id
   async updateCourse(req, res) {
     const { id } = req.params;
-    const { title, description } = req.body; // Removed price
+    const { title, description, lesson } = req.body; // Removed price
 
     try {
       const course = await Course.findById(id);
@@ -60,6 +60,10 @@ class courseController {
 
       course.title = title || course.title;
       course.description = description || course.description;
+      if (lesson && Array.isArray(lesson)) {
+        course.lessons = lesson; // Assuming lessons is an array of lesson IDs
+      }
+
       await course.save();
 
       res.status(200).json({

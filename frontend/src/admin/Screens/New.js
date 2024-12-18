@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../Components/Sidebar";
 import Navbar from "../Components/Navbar";
 import "../Style/new.scss";
@@ -9,6 +9,7 @@ const New = ({ inputs, title }) => {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState('');
   const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
 
   const { userId, lessonId, courseId, packageinforId } = useParams();
@@ -44,9 +45,6 @@ const New = ({ inputs, title }) => {
     if (file) {
       data.append(resourceType === "user" ? "avatar" : "excelFile", file);
     }
-    data.forEach((value, key) => {
-      console.log(key, value);
-    });
 
     try {
       let response;
@@ -69,20 +67,33 @@ const New = ({ inputs, title }) => {
           body: data,
         });
       } else if (resourceType === "course") {
+        const courseData = {
+          title: formData.title,
+          description: formData.description,
+        };
         response = await fetch("http://localhost:8080/v1/api/course/create", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
           },
-          body: data,
+          body: JSON.stringify(courseData),
         });
       } else if (resourceType === "packageinfo") {
+        const packageInfoData = {
+          packageName: formData.packageName,
+          description: formData.description,
+          price: formData.price,
+          timeDuration: formData.timeDuration,
+        };
+
         response = await fetch("http://localhost:8080/v1/api/packageinfo/create", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
           },
-          body: data,
+          body: JSON.stringify(packageInfoData),
         });
       }
 
@@ -90,6 +101,15 @@ const New = ({ inputs, title }) => {
 
       if (response.ok) {
         alert("Resource created successfully!");
+        if (resourceType === "user") {
+          navigate('/admin/users');
+        } else if (resourceType === "lesson") {
+          navigate('/admin/lessons');
+        } else if (resourceType === "course") {
+          navigate('/admin/courses');
+        } else if (resourceType === "packageinfo") {
+          navigate('/admin/packageinfors');
+        }
       } else {
         alert(responseData.message || "Failed to create resource");
       }
